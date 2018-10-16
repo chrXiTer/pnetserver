@@ -1,94 +1,30 @@
 import simplejson as json
 import appdc.api.ssh_th as ssh_th
 import appdc.cmd.hosts as hostsM
-from multiprocessing import Pool
 
 # 001
-def scpThFile(dict1):
-    po=Pool(len(hosts))
-    for i in range(0, len(hosts)):
-        dict1["host"] = hosts[i]
-        jsonStr = json.dumps(dict1)
-        po.apply_async(ssh_th.scpFileToAHost, args=(jsonStr,))
-    po.close() 
-    po.join() 
-    print("-- scp th -- complete")
-
-def scpDirS(dict1, parentDir, DirName):
-    execCmd(dict1, '/bin/rm -rf '+ parentDir + DirName)
-    dict1['srcResDir'] = parentDir + DirName
-    dict1['destResDir'] = parentDir
-    jsonStr = json.dumps(dict1)
-    ssh_th.scpFileToHosts(jsonStr)
-    print("-- scpDirS -- complete")
-
-def scpFileS(dict1, DirPath, filename):
-    execCmd(dict1, '/bin/rm -rf ' + DirPath + filename)
-    dict1['srcResDir']= DirPath + filename
-    dict1['destResDir']= DirPath + filename
-    jsonStr = json.dumps(dict1)
-    ssh_th.scpFileToHosts(jsonStr)
-    print("-- scpFileS -- complete")
-
-
-def _scpDirOrFile(dict1):
-    po=Pool(len(hosts))
-    for i in range(0, len(hosts)):
-        dict1["host"] = hosts[i]
-        jsonStr = json.dumps(dict1)
-        po.apply_async(ssh_th.scpFileToAHost, args=(jsonStr,))
-    po.close() 
-    po.join()
-
-def scpDir(dict1, parentDir, DirName):
-    execCmd(dict1, '/bin/rm -rf '+ parentDir + DirName)
-    dict1['srcResDir'] = parentDir + DirName
-    dict1['destResDir'] = parentDir
-    _scpDirOrFile(dict1)
-    print("-- scpDir -- complete")
-
-def scpFile(dict1, DirPath, filename):
-    execCmd(dict1, '/bin/rm -rf ' + DirPath + filename)
-    dict1['srcResDir']= DirPath + filename
-    dict1['destResDir']= DirPath + filename
-    _scpDirOrFile(dict1)
-    print("-- scpFile -- complete")
-
-def execCmd(dict1, cmdStr, asRoot=True):
-    dict1['cmd']=cmdStr
-    po=Pool(len(hosts))
-    for i in range(0, len(hosts)):
-        dict1["host"] = hosts[i]
-        jsonStr = json.dumps(dict1)
-        po.apply_async(ssh_th.execCmdToAHost, args=(jsonStr,asRoot))
-    po.close() 
-    po.join() 
-    print("--crun.py execCmd %s -- complete" % cmdStr)
 
 if __name__=='__main__':
-    hosts = hostsM.hosts
+    
     dict1 = {
         'username':'nscc',
         'host':'',
-        'hosts':hosts,
         'password':'nsccGZ-KD1810',
         'srcResDir':'',
         'destResDir':'',
         'cmd':''
     }
-    execCmd(dict1, '', False)  #以非root用户（登录用户）执行ssh，以可能的处理第一次登录接受key的情况
 
-    '''k8s 开启 cadvisor
-    dict1['hosts'] = hostsM.hosts_k8s
+    '''k8s 开启 cadvisor (自能执行一次)
     fileToEdit='/etc/systemd/system/kubelet.service.d/10-kubeadm.conf'
     cmd1="sed -i 's/$KUBELET_EXTRA_ARGS/$KUBELET_EXTRA_ARGS --cadvisor-port=4194/g' " + fileToEdit 
-    execCmd(dict1, cmd1 + ';systemctl daemon-reload; systemctl restart kubelet')
+    ssh_th.execCmd(hostsM.hosts_k8s, dict1, cmd1 + ';systemctl daemon-reload; systemctl restart kubelet')
     '''
     
-    #dict1['hosts'] = hostsM.hosts
-    scpDir(dict1, '/home/nscc/th/', 'k8s-moni')
+    #ssh_th.scpDir(hostsM.hosts, dict1, '/home/nscc/th/', 'k8s-moni')
 
-    
+    hosts = [host for host in hostsM.hosts_k8s if host != '10.129.48.3']
+    ssh_th.execCmd(hosts, "kubeadm join 10.139.48.3:6443 --token suhywb.yfrhe7w2pwqwyst5 --discovery-token-ca-cert-hash sha256:b9f36b83aa69d84c5cc3ce6812e8baca9d697b44d3fe97e9d06212cf619c81f1")
 
     #execCmd(dict1, 'rm -rf /home/nscc/th')
     #scpDir(dict1, 'home/nscc/', 'th')

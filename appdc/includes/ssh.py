@@ -19,52 +19,12 @@ class SshClient(object):
         return resultStr 
 
     def sshLogin(self, host, username, password):
+        self.checkFirst(host, username, password)
         sshObj = pxssh.pxssh(timeout=300,options={
                     "StrictHostKeyChecking": "no",
                     "UserKnownHostsFile": "/dev/null"})
         sshObj.login(host, username, password)
         return sshObj
-
-    def execCmdRoot(self, host, username, password, cmd=''):
-        try:
-            print('---execCmdRoot-11---%s' % host)
-            sshObj = self.sshLogin(host, username, password)
-            self.sudo_i(sshObj, password, host)
-            sshObj.sendline(cmd)
-            for i in range(0, 18):
-                ret = sshObj.prompt(10)
-                print("--execCmdRoot --exec--%d--%s--%s" % (i, str(ret), host))
-                if ret == True:
-                    break
-                sshObj.sendline('')
-            #print(str(sshObj.before))
-            #print(str(sshObj.buffer))
-            #print(str(sshObj.after))
-        except Exception as e:
-            print('--execCmdRoot--error-- %s' % str(e))
-        print('--execCmdRoot--ok--')
-
-    def execCmd(self, host, username, password, cmd='', asRoot=False):
-        if asRoot:
-            return self.execCmdRoot(host, username, password, cmd)
-        try:
-            ssh = pxssh.spawn('ssh %s@%s %s' % (username, host, cmd), timeout=300)
-            i = ssh.expect(['[P|p]assword:', 'continue connecting'])   
-            if i == 0:                                              
-                ssh.sendline(password)                                 
-            elif i == 1:                                               
-                ssh.sendline('yes')                              
-                ssh.expect('[P|p]assword:')                            
-                ssh.sendline(password)
-            if cmd == '':                                             
-                ssh.waitnoecho()                                       
-            else:                                                     
-                ssh.expect(pxssh.EOF)
-            print('--execCmd--**--')
-        except Exception as e:
-            print('--execCmd-error- %s %s %s' % (host, cmd, str(e)))
-        print('--execCmd-ok- %s "%s"' % (host, cmd))
-        return '--execCmd-ok- %s "%s"' % (host, cmd)
 
     def sudo_i(self, sshObj, password, host):
         try:
@@ -80,4 +40,55 @@ class SshClient(object):
         except Exception as e:
             print('--sudo_i-error- %s %s' % (host, str(e)))
         print('--sudo_i-ok- %s' % host)
+    
+    def execCmd(self, sshObjRoot, cmd):
+        sshObjRoot.sendline(cmd)
+        for i in range(0, 18):
+            ret = sshObjRoot.prompt(10)
+            print("--execCmdRoot --exec--%d--%s--%s" % (i, str(ret), host))
+            if ret == True:
+                break
+            sshObjRoot.sendline('')
+        #print(str(sshObjRoot.before))
+        #print(str(sshObjRoot.buffer))
+        #print(str(sshObjRoot.after))
+
+    def execCmdRoot(self, host, username, password, cmd):
+        try:
+            print('---execCmdRoot-11---%s' % host)
+            sshObj = self.sshLogin(host, username, password)
+            self.execCmd(sshObj, cmd)
+        except Exception as e:
+            print('--execCmdRoot--error-- %s' % str(e))
+        print('--execCmdRoot--ok--')
+    
+    def execCmdCurrUser(self, host, username, password, cmd):
+        try:
+            print('---execCmdRoot-11---%s' % host)
+            sshObj = self.sshLogin(host, username, password)
+            self.sudo_i(sshObj, password, host)
+            self.execCmd(sshObj, cmd)
+        except Exception as e:
+            print('--execCmdRoot--error-- %s' % str(e))
+        print('--execCmdRoot--ok--')
+
+
+    def checkFirst(self, host, username, password):
+        try:
+            ssh = pxssh.spawn('ssh %s@%s' % (username, host), timeout=300)
+            i = ssh.expect(['[P|p]assword:', 'continue connecting'])   
+            if i == 0:                                              
+                ssh.sendline(password)                                 
+            elif i == 1:                                               
+                ssh.sendline('yes')                              
+                ssh.expect('[P|p]assword:')                            
+                ssh.sendline(password)                                            
+            ssh.waitnoecho()                                       
+            print('--checkFirst--**--')
+        except Exception as e:
+            print('--checkFirst-error- %s %s' % (host, str(e)))
+        print('--checkFirst-ok- %s' % host)
+        return '--checkFirst-ok- %s' % host
+
+    
 
