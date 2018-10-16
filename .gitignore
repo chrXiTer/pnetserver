@@ -90,3 +90,5 @@ ENV/
 .ropeproject
 appdc/static/toLinux/
 th
+th/
+
