@@ -1,0 +1,11 @@
+nose
+sphinx
+flask
+Flask-Script
+flask_bootstrap
+flask-cors
+simplejson
+urllib3
+HTML2Text
+bs4
+pexpect
