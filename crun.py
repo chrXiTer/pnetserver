@@ -24,7 +24,11 @@ if __name__=='__main__':
     #ssh_th.scpDir(hostsM.hosts, dict1, '/home/nscc/th/', 'k8s-moni')
 
     hosts = [host for host in hostsM.hosts_k8s if host != '10.129.48.3']
-    ssh_th.execCmd(hosts, dict1, "kubeadm join 10.139.48.3:6443 --token suhywb.yfrhe7w2pwqwyst5 --discovery-token-ca-cert-hash sha256:b9f36b83aa69d84c5cc3ce6812e8baca9d697b44d3fe97e9d06212cf619c81f1")
+    ssh_th.execCmd(hosts, dict1,
+            'kubeadm join 10.139.48.3:6443 --token 0j6p7w.tgie7rpflc9gxcor --discovery-token-ca-cert-hash sha256:2e0c39cf6e9684a673fe2d41a8bd56a98bfa3ef04c45ca4e2d827ab6eb2c1a7c'
+            ) 
+
+    #ssh_th.scpDir(hostsM.hosts, dict1, '/home/nscc/th/', 'calico-3.2.3')
 
     #execCmd(dict1, 'rm -rf /home/nscc/th')
     #scpDir(dict1, 'home/nscc/', 'th')
