@@ -21,13 +21,20 @@ if __name__=='__main__':
     ssh_th.execCmd(hostsM.hosts_k8s, dict1, cmd1 + ';systemctl daemon-reload; systemctl restart kubelet')
     '''
     
+    
+    
     #ssh_th.scpDir(hostsM.hosts, dict1, '/home/nscc/th/', 'k8s-moni')
-
+    
+    '''
     hosts = [host for host in hostsM.hosts_k8s if host != '10.129.48.3']
     ssh_th.execCmd(hosts, dict1,
             'kubeadm join 10.139.48.3:6443 --token 0j6p7w.tgie7rpflc9gxcor --discovery-token-ca-cert-hash sha256:2e0c39cf6e9684a673fe2d41a8bd56a98bfa3ef04c45ca4e2d827ab6eb2c1a7c'
             ) 
+    '''
 
+    #ssh_th.execCmd(hostsM.hosts_k8s, dict1,  "sed -i 's/10.96.0.10/10.190.96.10/g' /var/lib/kubelet/config.yaml")
+    ssh_th.execCmd(hostsM.hosts_k8s, dict1, "systemctl daemon-reload; systemctl restart kubelet")
+    
     #ssh_th.scpDir(hostsM.hosts, dict1, '/home/nscc/th/', 'calico-3.2.3')
 
     #execCmd(dict1, 'rm -rf /home/nscc/th')
