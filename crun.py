@@ -30,10 +30,19 @@ if __name__=='__main__':
     '''
 
     # 运行 calico node 容器
-    hosts=hostsM.hosts_cal2
-    ssh_th.execCmd(hosts, dict1, '/home/nscc/th/calico-2.6.11/calicoctl node run --node-image=quay.io/calico/node:v2.6.9 --config=/home/nscc/th/calico-2.6.11/calico-1.cfg')
-    
-    
+
+    hosts=hostsM.hosts_cal
+    ssh_th.execCmd(hosts, dict1, '/home/nscc/th/calico-2.6.11/calicoctl node run --node-image=quay.io/calico/node:v2.6.11 --config=/home/nscc/th/calico-2.6.11/calico-1.cfg')
+
+    # 修改主机名
+    '''
+    for host in hostsM.hosts_cal2:
+        hosts = [host]
+        hostnameOld='n-%s-%s' % (host[3:5], host[10:])
+        hostname='n-%s-%s' % (host[3:6], host[10:])
+        ssh_th.execCmd(hosts, dict1, 'echo %s > /etc/hostname; sed -i s/%s/%s/ /etc/hosts; hostname %s' % (hostname, hostnameOld, hostname, hostname))
+    ssh_th.execCmd(hostsM.hosts_cal2, dict1, '/etc/init.d/hostname.sh start')
+    '''
 
     #k8s 开启 cadvisor (自能执行一次)
     '''
@@ -41,7 +50,7 @@ if __name__=='__main__':
     cmd1="sed -i 's/$KUBELET_EXTRA_ARGS/$KUBELET_EXTRA_ARGS --cadvisor-port=4194/g' " + fileToEdit 
     ssh_th.execCmd(hostsM.hosts_k8s2, dict1, cmd1 + ';systemctl daemon-reload; systemctl restart kubelet')
     '''
-
+    
     # 加入集群
     '''
     hosts = [host for host in hostsM.hosts_k8s2 if host != '10.129.48.3']
