@@ -23,11 +23,17 @@ if __name__=='__main__':
     ssh_th.execCmd(hosts, dict1, cmd1)
     '''
 
-    #配置docker使用试验特征已经使用etcd存储
+    # 配置docker使用试验特征、以及使用etcd存储
     '''
     hosts=hostsM.hosts_cal2
     ssh_th.execCmd(hosts, dict1, 'cp /home/nscc/th/calico-2.6.11/daemon.json /etc/docker/; systemctl daemon-reload; systemctl restart docker')
     '''
+
+    # 运行 calico node 容器
+    hosts=hostsM.hosts_cal2
+    ssh_th.execCmd(hosts, dict1, '/home/nscc/th/calico-2.6.11/calicoctl node run --node-image=quay.io/calico/node:v2.6.9 --config=/home/nscc/th/calico-2.6.11/calico-1.cfg')
+    
+    
 
     #k8s 开启 cadvisor (自能执行一次)
     '''
