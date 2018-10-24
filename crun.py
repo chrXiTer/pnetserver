@@ -44,7 +44,7 @@ def func_setK8sCadvisor(): #k8s 开启 cadvisor (自能执行一次)
 def func_resetK8s():
     hosts=hostsM.hosts
     cmd='kubeadm reset -f;m -r $HOME/.kube;rm -r /var/etcd/calico-data;ip link delete flannel.1;ip link delete cni0'
-    sh_th.execCmd(hosts, dict1, cmd)
+    ssh_th.execCmd(hosts, dict1, cmd)
 
 ###################
 
