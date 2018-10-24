@@ -43,7 +43,7 @@ class SshClient(object):
     
     def execCmd(self, host, sshObjRoot, cmd):
         sshObjRoot.sendline(cmd)
-        for i in range(0, 18):
+        for i in range(0, 23):
             ret = sshObjRoot.prompt(10)
             print("--execCmdRoot --exec--%d--%s--%s" % (i, str(ret), host))
             if ret == True:

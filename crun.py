@@ -21,7 +21,7 @@ def func_chgHostName(hosts): # 修改主机名
         ssh_th.execCmd(hosts2, dict1, 'echo %s > /etc/hostname; sed -i s/%s/%s/ /etc/hosts; hostname %s' % (hostname, hostnameOld, hostname, hostname))
     #ssh_th.execCmd(hosts, dict1, '/etc/init.d/hostname.sh start')
 
-def func_initInstallSoft_setSwap(hosts)
+def func_initInstallSoft_setSwap(hosts):
     cmdInstallSoft='service docker stop; /home/nscc/th/sh/setupSoft.sh'
     cmdSetSwap="swapoff -a; sed -i '/swap/s/^/#/' /etc/fstab"
     ssh_th.execCmd(hosts, dict1, '%s && %s' % (cmdInstallSoft, cmdSetSwap))
@@ -56,7 +56,7 @@ def func_JoinK8s(): # 加入集群
     cmd3="systemctl daemon-reload; systemctl restart kubelet"
     ssh_th.execCmd(hosts, dict1, '%s;%s;%s' % (cmd1, cmd2, cmd3))
 
-def funcScpFile() # 复制,某个文件夹
+def funcScpFile(hosts): # 复制,某个文件夹
     ssh_th.scpDir(hosts, dict1, '/home/nscc/th/', 'sh')
     #ssh_th.execCmd(hosts, dict1, 'cd /home/nscc/th/tar.o; ls | xargs -n 1 docker image load -i')
     #ssh_th.scpDir(hosts, dict1, '/home/nscc/th/', 'calico-2.6.11')
@@ -69,9 +69,6 @@ if __name__=='__main__':
 
     funcScpFile(hostsM.hosts)
     func_loadImage(hostsM.hosts)
-    
-    cmd='cat /home/nscc/th/calico-3.3.0/{rbac.yaml,calico.yaml,calicoctl.yaml} | kubectl apply -f -
-    ssh_th.execCmd(hosts, dict1, cmd)
 
     
 
