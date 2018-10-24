@@ -70,11 +70,3 @@ if __name__=='__main__':
     #funcScpFile(hostsM.hosts)
     #func_loadImage(hostsM.hosts)
     
-    cmd='cat /home/nscc/th/calico-3.3.0/{rbac.yaml,calico.yaml,calicoctl.yaml} | kubectl apply -f -'
-    ssh_th.execCmd(hostsM.hosts, dict1, cmd)
-
-    
-
-
-    
-
