@@ -70,6 +70,8 @@ if __name__=='__main__':
     funcScpFile(hostsM.hosts)
     func_loadImage(hostsM.hosts)
 
+    sh_th.execCmd(hostsM.hosts, dict1, 'kubeadm reset;m -r $HOME/.kube;rm -r /var/etcd/calico-data;ip link delete flannel.1;ip link delete cni0')
+
     
 
 
