@@ -43,8 +43,8 @@ def func_setK8sCadvisor(): #k8s 开启 cadvisor (自能执行一次)
 
 def func_resetK8s():
     hosts=hostsM.hosts
-    cmd='kubeadm reset -f;m -r $HOME/.kube;rm -r /var/etcd/calico-data;ip link delete flannel.1;ip link delete cni0'
-    sh_th.execCmd(hosts, dict1, cmd)
+    cmd='kubeadm reset -f;rm -r $HOME/.kube;rm -r /var/etcd/calico-data;ip link delete flannel.1;ip link delete cni0'
+    ssh_th.execCmd(hosts, dict1, cmd)
 
 ###################
 
@@ -58,7 +58,7 @@ def func_loadImage(hosts): #复制文件和安装docker，k8s等软件
 
 def func_JoinK8s(): # 加入集群
     hosts = [host for host in hostsM.hosts_k8s2 if host != '10.129.48.3']
-    cmd1='kubeadm join 10.139.48.3:6443 --token 0j6p7w.tgie7rpflc9gxcor --discovery-token-ca-cert-hash sha256:2e0c39cf6e9684a673fe2d41a8bd56a98bfa3ef04c45ca4e2d827ab6eb2c1a7c'
+    cmd1='kubeadm join 10.139.48.3:6443 --token a36za2.40txlmutrjhhibca --discovery-token-ca-cert-hash sha256:256074d584a1e9380207a8950538e77e9d93f9f940c5472ba80ec2b932f9f8fd'
     cmd2="sed -i 's/10.96.0.10/10.190.96.10/g' /var/lib/kubelet/config.yaml"
     cmd3="systemctl daemon-reload; systemctl restart kubelet"
     ssh_th.execCmd(hosts, dict1, '%s;%s;%s' % (cmd1, cmd2, cmd3))
