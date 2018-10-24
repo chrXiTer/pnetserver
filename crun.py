@@ -42,8 +42,9 @@ def func_setK8sCadvisor(): #k8s 开启 cadvisor (自能执行一次)
     ssh_th.execCmd(hosts, dict1, cmd1 + ';systemctl daemon-reload; systemctl restart kubelet')
 
 def func_resetK8s():
+    hosts=hostsM.hosts
     cmd='kubeadm reset -f;m -r $HOME/.kube;rm -r /var/etcd/calico-data;ip link delete flannel.1;ip link delete cni0'
-    sh_th.execCmd(hostsM.hosts, dict1, cmd)
+    sh_th.execCmd(hosts, dict1, cmd)
 
 ###################
 
@@ -75,6 +76,6 @@ if __name__=='__main__':
 
     #funcScpFile(hostsM.hosts)
     #func_loadImage(hostsM.hosts)
-
     
+    func_resetK8s()
 
