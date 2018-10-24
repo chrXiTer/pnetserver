@@ -57,7 +57,7 @@ def func_loadImage(hosts): #复制文件和安装docker，k8s等软件
 
 
 def func_JoinK8s(): # 加入集群
-    hosts = [host for host in hostsM.hosts_k8s2 if host != '10.129.48.3']
+    hosts = [host for host in hostsM.hosts_k8s if host != '10.129.48.3']
     cmd1='kubeadm join 10.139.48.3:6443 --token a36za2.40txlmutrjhhibca --discovery-token-ca-cert-hash sha256:256074d584a1e9380207a8950538e77e9d93f9f940c5472ba80ec2b932f9f8fd'
     cmd2="sed -i 's/10.96.0.10/10.190.96.10/g' /var/lib/kubelet/config.yaml"
     cmd3="systemctl daemon-reload; systemctl restart kubelet"
@@ -78,4 +78,5 @@ if __name__=='__main__':
     #func_loadImage(hostsM.hosts)
     
     #func_resetK8s()
+    func_resetK8s()
 
