@@ -67,13 +67,8 @@ if __name__=='__main__':
     # func_cfgDocker(hostsM.hosts_cal2)
     # func_initInstallSoft_setSwap(hostsM.hosts2)
 
-    funcScpFile(hostsM.hosts)
-    func_loadImage(hostsM.hosts)
+    #funcScpFile(hostsM.hosts)
+    #func_loadImage(hostsM.hosts)
 
     sh_th.execCmd(hostsM.hosts, dict1, 'kubeadm reset;m -r $HOME/.kube;rm -r /var/etcd/calico-data;ip link delete flannel.1;ip link delete cni0')
-
-    
-
-
-    
 
