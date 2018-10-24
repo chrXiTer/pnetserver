@@ -77,5 +77,5 @@ if __name__=='__main__':
     #funcScpFile(hostsM.hosts)
     #func_loadImage(hostsM.hosts)
     
-    func_resetK8s()
+    #func_resetK8s()
 
