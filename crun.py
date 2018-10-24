@@ -41,6 +41,10 @@ def func_setK8sCadvisor(): #k8s 开启 cadvisor (自能执行一次)
     cmd1="sed -i 's/$KUBELET_EXTRA_ARGS/$KUBELET_EXTRA_ARGS --cadvisor-port=4194/g' " + fileToEdit 
     ssh_th.execCmd(hosts, dict1, cmd1 + ';systemctl daemon-reload; systemctl restart kubelet')
 
+def func_resetK8s():
+    cmd='kubeadm reset -f;m -r $HOME/.kube;rm -r /var/etcd/calico-data;ip link delete flannel.1;ip link delete cni0'
+    sh_th.execCmd(hostsM.hosts, dict1, cmd)
+
 ###################
 
 def func_loadImage(hosts): #复制文件和安装docker，k8s等软件
@@ -48,6 +52,8 @@ def func_loadImage(hosts): #复制文件和安装docker，k8s等软件
     cmdLoadDockerImage1='cd /home/nscc/th/tar && ls | xargs -n 1 docker load -i'
     #cmdLoadDockerImage2='cd /home/nscc/th/tar.o && ls | xargs -n 1 docker load -i'
     ssh_th.execCmd(hosts, dict1, cmdLoadDockerImage1)
+
+
 
 def func_JoinK8s(): # 加入集群
     hosts = [host for host in hostsM.hosts_k8s2 if host != '10.129.48.3']
@@ -70,5 +76,5 @@ if __name__=='__main__':
     #funcScpFile(hostsM.hosts)
     #func_loadImage(hostsM.hosts)
 
-    sh_th.execCmd(hostsM.hosts, dict1, 'kubeadm reset;m -r $HOME/.kube;rm -r /var/etcd/calico-data;ip link delete flannel.1;ip link delete cni0')
+    
 
