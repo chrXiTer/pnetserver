@@ -58,7 +58,7 @@ def func_loadImage(hosts): #复制文件和安装docker，k8s等软件
 
 def func_JoinK8s(): # 加入集群
     hosts = [host for host in hostsM.hosts_k8s if host != '10.129.48.3']
-    cmd1='kubeadm join 10.139.48.3:6443 --token a36za2.40txlmutrjhhibca --discovery-token-ca-cert-hash sha256:256074d584a1e9380207a8950538e77e9d93f9f940c5472ba80ec2b932f9f8fd'
+    cmd1='kubeadm join 10.139.48.3:6443 --token f0i2jb.fqkbh6nr98zcoajs --discovery-token-ca-cert-hash sha256:3865f14fc921d5b8f7e2404bd9a7fdbb653c57ece8f5d1737063f01c4d62777a'
     cmd2="sed -i 's/10.96.0.10/10.190.96.10/g' /var/lib/kubelet/config.yaml"
     cmd3="systemctl daemon-reload; systemctl restart kubelet"
     ssh_th.execCmd(hosts, dict1, '%s;%s;%s' % (cmd1, cmd2, cmd3))
@@ -78,5 +78,9 @@ if __name__=='__main__':
     #func_loadImage(hostsM.hosts)
     
     #func_resetK8s()
-    func_JoinK8s()
+    #func_JoinK8s()
+    #ssh_th.execCmd(hostsM.hosts, dict1, 'rm -r /var/etcd/calico-data')
+    #ssh_th.execCmd(hostsM.hosts, dict1, 'chown -R nscc /home/nscc')
+    #ssh_th.scpFile(hostsM.hosts, dict1, '/home/nscc/th/calico-3.3.0/', 'calicoctl')
+    ssh_th.scpFile(hostsM.hosts, dict1, '/home/nscc/th/calico-3.3.0/', 'etcdctl')
 
