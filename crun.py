@@ -83,7 +83,6 @@ if __name__=='__main__':
     # func_cfgDocker(hostsM.hosts_cal2)
     #funcScpFile(hostsM.hosts)
     #func_loadImage(hostsM.hosts)
-    
     #func_resetK8s()
     #func_JoinK8s()
 
