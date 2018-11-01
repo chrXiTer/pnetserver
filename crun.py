@@ -69,7 +69,7 @@ def func_loadImage(hosts): #复制文件和安装docker，k8s等软件
 def func_JoinK8s(): # 加入集群
     #hosts = [host for host in hostsM.hosts_k8s if host != '10.129.48.3']
     hosts=hostsM.hosts_k8s2
-    cmd1='kubeadm join 10.144.0.21:6443 --token dau9q6.3g8waf5x47ljg53c --discovery-token-ca-cert-hash sha256:3a00204d1a7a5c9bb6de795233e22c8cc0a40f6bdc9a42c94efaf40b6ded5977'
+    cmd1='kubeadm join 10.144.0.21:6443 --token 19318j.6mb3ls3vsfhdczo4 --discovery-token-ca-cert-hash sha256:e1b1b046eda0ebaa58f939e8e02de97f60b99b37792d36f531fe12e99032347c'
     cmd2="sed -i 's/10.96.0.10/10.190.96.10/g' /var/lib/kubelet/config.yaml"
     cmd3="systemctl daemon-reload; systemctl restart kubelet"
     ssh_th.execCmd(hosts, dict1, '%s;%s;%s' % (cmd1, cmd2, cmd3))
@@ -81,12 +81,12 @@ def funcScpFile(hosts): # 复制,某个文件夹
     #ssh_th.scpDir(hosts, dict1, '/home/nscc/th/', 'calico-3.3.0')
 
 if __name__=='__main__':
-    func_chgHostName(hostsM.hosts2)
+    #func_chgHostName(hostsM.hosts2)
     #ssh_th.scpDir(hostsM.hosts2, dict1, '/home/nscc/', 'th')
     #func_initInstallSoft_setSwap(hostsM.hosts2)
 
     #func_loadImage(hostsM.hosts2)
-    #func_JoinK8s()
+    func_JoinK8s()
     # func_setK8sCadvisor() 一个主机只能执行一次
     #func_resetK8s()
     #
