@@ -80,9 +80,14 @@ if __name__=='__main__':
     ssh_th.scpDir(hostsM.hosts2, dict1, '/home/nscc/', 'th')
     func_initInstallSoft_setSwap(hostsM.hosts2)
 
-    # func_cfgDocker(hostsM.hosts_cal2)
+    #func_cfgDocker(hostsM.hosts_cal2)
     #funcScpFile(hostsM.hosts)
     #func_loadImage(hostsM.hosts)
+
     #func_resetK8s()
     #func_JoinK8s()
+    #ssh_th.execCmd(hostsM.hosts, dict1, 'rm -r /var/etcd/calico-data')
+    #ssh_th.execCmd(hostsM.hosts, dict1, 'chown -R nscc /home/nscc')
+    #ssh_th.scpFile(hostsM.hosts, dict1, '/home/nscc/th/calico-3.3.0/', 'calicoctl')
+    ssh_th.scpFile(hostsM.hosts, dict1, '/home/nscc/th/calico-3.3.0/', 'etcdctl')
 
