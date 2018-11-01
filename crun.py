@@ -16,10 +16,13 @@ dict1 = {
 def func_chgHostName(hosts): # 修改主机名
     for host in hosts:
         hosts2 = [host]
-        hostnameOld='n-%s-%s' % (host[3:5], host[10:])
-        hostname='n-%s-%s' % (host[3:6], host[10:])
-        ssh_th.execCmd(hosts2, dict1, 'echo %s > /etc/hostname; sed -i s/%s/%s/ /etc/hosts; hostname %s' % (hostname, hostnameOld, hostname, hostname))
-    #ssh_th.execCmd(hosts, dict1, '/etc/init.d/hostname.sh start')
+        hostnameOld='kickseed'
+        hostname='n-%s-%s' % (host[3:6], host[9:])
+        cmd1='echo %s > /etc/hostname' % hostname
+        cmd2='sed -i s/%s/%s/ /etc/hosts' % (hostnameOld, hostname)
+        cmd3='hostname %s' % hostname
+        ssh_th.execCmd(hosts2, dict1, '%s;%s;%s' % (cmd1, cmd2, cmd3))
+        #ssh_th.execCmd(hosts, dict1, '/etc/init.d/hostname.sh start')
 
 def func_initInstallSoft_setSwap(hosts):
     cmdInstallSoft='''service docker stop;\
@@ -42,7 +45,7 @@ def func_RunCalico2Node(): # 运行 calico node 2.6.11 容器
     ssh_th.execCmd(hosts, dict1, cmd)
 
 def func_setK8sCadvisor(): #k8s 开启 cadvisor (自能执行一次)
-    hosts=hostsM.hosts_k8s
+    hosts=hostsM.hosts_k8s2
     fileToEdit='/etc/systemd/system/kubelet.service.d/10-kubeadm.conf'
     cmd1="sed -i 's/$KUBELET_EXTRA_ARGS/$KUBELET_EXTRA_ARGS --cadvisor-port=4194/g' " + fileToEdit 
     ssh_th.execCmd(hosts, dict1, cmd1 + ';systemctl daemon-reload; systemctl restart kubelet')
@@ -78,15 +81,14 @@ def funcScpFile(hosts): # 复制,某个文件夹
     #ssh_th.scpDir(hosts, dict1, '/home/nscc/th/', 'calico-3.3.0')
 
 if __name__=='__main__':
-    #func_chgHostName(hostsM.hosts2)
+    func_chgHostName(hostsM.hosts2)
     #ssh_th.scpDir(hostsM.hosts2, dict1, '/home/nscc/', 'th')
     #func_initInstallSoft_setSwap(hostsM.hosts2)
 
     #func_loadImage(hostsM.hosts2)
-    func_JoinK8s()
+    #func_JoinK8s()
     # func_setK8sCadvisor() 一个主机只能执行一次
-
-    func_resetK8s()
+    #func_resetK8s()
     #
     #func_cfgDocker(hostsM.hosts_cal2)
     #ssh_th.execCmd(hostsM.hosts, dict1, 'rm -r /var/etcd/calico-data')
