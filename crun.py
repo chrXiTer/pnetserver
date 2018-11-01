@@ -84,7 +84,7 @@ if __name__=='__main__':
 
     #func_loadImage(hostsM.hosts2)
     func_JoinK8s()
-    func_setK8sCadvisor()
+    # func_setK8sCadvisor() 一个主机只能执行一次
 
     #func_resetK8s()
     #
