@@ -22,7 +22,13 @@ def func_chgHostName(hosts): # 修改主机名
     #ssh_th.execCmd(hosts, dict1, '/etc/init.d/hostname.sh start')
 
 def func_initInstallSoft_setSwap(hosts):
-    cmdInstallSoft='service docker stop; /home/nscc/th/sh/setupSoft.sh'
+    cmdInstallSoft='''service docker stop;\
+        cd /home/nscc/th/deb/vim-curl-unzip.deb;\
+        dpkg -i --force-all -B *.deb;\
+        cd /home/nscc/th/deb/docker-17.03.2.deb;\
+        dpkg -i --force-all -B *.deb;\
+        cd /home/nscc/th/deb/k8s-1.11.3-adm.deb;\
+        dpkg -i --force-all -B *.deb'''
     cmdSetSwap="swapoff -a; sed -i '/swap/s/^/#/' /etc/fstab"
     ssh_th.execCmd(hosts, dict1, '%s && %s' % (cmdInstallSoft, cmdSetSwap))
 
@@ -70,10 +76,11 @@ def funcScpFile(hosts): # 复制,某个文件夹
     #ssh_th.scpDir(hosts, dict1, '/home/nscc/th/', 'calico-3.3.0')
 
 if __name__=='__main__':
-    # func_chgHostName(hostsM.hosts_cal2)
-    # func_cfgDocker(hostsM.hosts_cal2)
-    # func_initInstallSoft_setSwap(hostsM.hosts2)
+    func_chgHostName(hostsM.hosts2)
+    ssh_th.scpDir(hostsM.hosts2, dict1, '/home/nscc/', 'th')
+    func_initInstallSoft_setSwap(hostsM.hosts2)
 
+    # func_cfgDocker(hostsM.hosts_cal2)
     #funcScpFile(hostsM.hosts)
     #func_loadImage(hostsM.hosts)
     
