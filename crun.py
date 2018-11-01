@@ -42,13 +42,13 @@ def func_RunCalico2Node(): # 运行 calico node 2.6.11 容器
     ssh_th.execCmd(hosts, dict1, cmd)
 
 def func_setK8sCadvisor(): #k8s 开启 cadvisor (自能执行一次)
-    hosts=hostsM.hosts_k8s2
+    hosts=hostsM.hosts_k8s
     fileToEdit='/etc/systemd/system/kubelet.service.d/10-kubeadm.conf'
     cmd1="sed -i 's/$KUBELET_EXTRA_ARGS/$KUBELET_EXTRA_ARGS --cadvisor-port=4194/g' " + fileToEdit 
     ssh_th.execCmd(hosts, dict1, cmd1 + ';systemctl daemon-reload; systemctl restart kubelet')
 
 def func_resetK8s():
-    hosts=hostsM.hosts
+    hosts=hostsM.hosts_k8s
     cmd='kubeadm reset -f;rm -r $HOME/.kube;rm -r /var/etcd/calico-data;ip link delete flannel.1;ip link delete cni0'
     ssh_th.execCmd(hosts, dict1, cmd)
 
@@ -86,7 +86,7 @@ if __name__=='__main__':
     func_JoinK8s()
     # func_setK8sCadvisor() 一个主机只能执行一次
 
-    #func_resetK8s()
+    func_resetK8s()
     #
     #func_cfgDocker(hostsM.hosts_cal2)
     #ssh_th.execCmd(hostsM.hosts, dict1, 'rm -r /var/etcd/calico-data')
