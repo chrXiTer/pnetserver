@@ -9,4 +9,4 @@ services:
       - ./appdc:/app/appdc
       - ./crun.py:/app/crun.py
       - ./logs:/app/logs
-      - ./th:/home/nscc/th
+      - /home/nscc/th:/home/nscc/th

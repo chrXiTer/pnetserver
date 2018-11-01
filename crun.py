@@ -55,16 +55,17 @@ def func_resetK8s():
 ###################
 
 def func_loadImage(hosts): #复制文件和安装docker，k8s等软件
-    ssh_th.scpDir(hosts, dict1, '/home/nscc/', 'th')
+    #ssh_th.scpDir(hosts, dict1, '/home/nscc/', 'th')
     cmdLoadDockerImage1='cd /home/nscc/th/tar && ls | xargs -n 1 docker load -i'
     #cmdLoadDockerImage2='cd /home/nscc/th/tar.o && ls | xargs -n 1 docker load -i'
-    ssh_th.execCmd(hosts, dict1, cmdLoadDockerImage1)
+    cmdLoadDockerImage2='docker load -i /home/nscc/th/tar.o/gcr.io_google-containers_heapster-grafana-amd64%3Av4.4.3.tar'
+    ssh_th.execCmd(hosts, dict1, cmdLoadDockerImage1 + ";" + cmdLoadDockerImage2 )
 
 
 
 def func_JoinK8s(): # 加入集群
     hosts = [host for host in hostsM.hosts_k8s if host != '10.129.48.3']
-    cmd1='kubeadm join 10.139.48.3:6443 --token f0i2jb.fqkbh6nr98zcoajs --discovery-token-ca-cert-hash sha256:3865f14fc921d5b8f7e2404bd9a7fdbb653c57ece8f5d1737063f01c4d62777a'
+    cmd1='kubeadm join 10.144.0.21:6443 --token dau9q6.3g8waf5x47ljg53c --discovery-token-ca-cert-hash sha256:3a00204d1a7a5c9bb6de795233e22c8cc0a40f6bdc9a42c94efaf40b6ded5977'
     cmd2="sed -i 's/10.96.0.10/10.190.96.10/g' /var/lib/kubelet/config.yaml"
     cmd3="systemctl daemon-reload; systemctl restart kubelet"
     ssh_th.execCmd(hosts, dict1, '%s;%s;%s' % (cmd1, cmd2, cmd3))
@@ -76,18 +77,18 @@ def funcScpFile(hosts): # 复制,某个文件夹
     #ssh_th.scpDir(hosts, dict1, '/home/nscc/th/', 'calico-3.3.0')
 
 if __name__=='__main__':
-    func_chgHostName(hostsM.hosts2)
-    ssh_th.scpDir(hostsM.hosts2, dict1, '/home/nscc/', 'th')
-    func_initInstallSoft_setSwap(hostsM.hosts2)
+    #func_chgHostName(hostsM.hosts2)
+    #ssh_th.scpDir(hostsM.hosts2, dict1, '/home/nscc/', 'th')
+    #func_initInstallSoft_setSwap(hostsM.hosts2)
 
     #func_cfgDocker(hostsM.hosts_cal2)
     #funcScpFile(hostsM.hosts)
-    #func_loadImage(hostsM.hosts)
+    func_loadImage(hostsM.hosts2)
 
     #func_resetK8s()
     #func_JoinK8s()
     #ssh_th.execCmd(hostsM.hosts, dict1, 'rm -r /var/etcd/calico-data')
     #ssh_th.execCmd(hostsM.hosts, dict1, 'chown -R nscc /home/nscc')
     #ssh_th.scpFile(hostsM.hosts, dict1, '/home/nscc/th/calico-3.3.0/', 'calicoctl')
-    ssh_th.scpFile(hostsM.hosts, dict1, '/home/nscc/th/calico-3.3.0/', 'etcdctl')
+    #ssh_th.scpFile(hostsM.hosts, dict1, '/home/nscc/th/calico-3.3.0/', 'etcdctl')
 
