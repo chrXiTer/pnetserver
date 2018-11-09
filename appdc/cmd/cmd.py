@@ -78,7 +78,7 @@ def funcScpFile(hosts): # 复制,某个文件夹
     #ssh_th.scpDir(hosts, dict1, '/home/nscc/th/', 'calico-2.6.11')
     #ssh_th.scpDir(hosts, dict1, '/home/nscc/th/', 'calico-3.3.0')
 
-if __name__=='__main__':
+def main():
     #func_chgHostName(hostsM.hosts2)
     #ssh_th.scpDir(hostsM.hosts2, dict1, '/home/nscc/', 'th')
     #func_initInstallSoft_setSwap(hostsM.hosts2)
