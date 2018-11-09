@@ -50,8 +50,7 @@ def func_setK8sCadvisor(): #k8s 开启 cadvisor (自能执行一次)
     cmd1="sed -i 's/$KUBELET_EXTRA_ARGS/$KUBELET_EXTRA_ARGS --cadvisor-port=4194/g' " + fileToEdit 
     ssh_th.execCmd(hosts, dict1, cmd1 + ';systemctl daemon-reload; systemctl restart kubelet')
 
-def func_resetK8s():
-    hosts=hostsM.hosts_k8s
+def func_resetK8s(hosts):
     cmd='kubeadm reset -f;rm -r $HOME/.kube;rm -r /var/etcd/calico-data;ip link delete flannel.1;ip link delete cni0'
     ssh_th.execCmd(hosts, dict1, cmd)
 
@@ -84,9 +83,11 @@ def main():
     #func_initInstallSoft_setSwap(hostsM.hosts2)
 
     #func_loadImage(hostsM.hosts2)
-    func_JoinK8s()
+    #func_JoinK8s()
     # func_setK8sCadvisor() 一个主机只能执行一次
-    #func_resetK8s()
+    
+    hosts = ['10.145.0.' + str(n) for n in range(11, 21) ]
+    func_resetK8s(hosts)
     #
     #func_cfgDocker(hostsM.hosts_cal2)
     #ssh_th.execCmd(hostsM.hosts, dict1, 'rm -r /var/etcd/calico-data')
