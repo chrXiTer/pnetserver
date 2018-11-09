@@ -3,16 +3,17 @@ from pexpect import pxssh, TIMEOUT
 #001
 class SshClient(object):
     def scpFileToAHost(self, username, host, password, srcResDir, destResDir,timeout=None):
-        try:                                                                                                  
-            child = pexpect.spawn('scp -r {srcResDir} {username}@{host}:{destResDir} '\
-                .format(srcResDir=srcResDir, username=username, host=host, destResDir=destResDir),
-                timeout=timeout) 
+        try:      
+            cmd='scp -r {srcResDir} {username}@{host}:{destResDir} '\
+                .format(srcResDir=srcResDir, username=username, host=host, destResDir=destResDir)
+            child = pexpect.spawn(cmd, timeout=timeout) 
             child.expect("password:")
             child.sendline(password)     
             ret = child.read().decode()
             child.close()     
             resultStr='--scpFileToAHost-ok- %s --%s' % (host, ret)
             print(resultStr)
+            print(cmd)
         except Exception as e:
             resultStr='--scpFileToAHost-error- %s --%s' % (host, str(e))
             print(resultStr)                           
@@ -32,7 +33,7 @@ class SshClient(object):
             #sshObj.expect('[P|p]asswrd')
             sshObj.waitnoecho()
             sshObj.sendline(password)
-            ret = sshObj.expect(['~# ', TIMEOUT], timeout=10)
+            ret = sshObj.expect(['~# ', TIMEOUT], timeout=20)
             if ret == 1:
                 print("--sudo_i--error--11-")
             else:
@@ -43,7 +44,7 @@ class SshClient(object):
     
     def execCmd(self, host, sshObjRoot, cmd):
         sshObjRoot.sendline(cmd)
-        for i in range(0, 23):
+        for i in range(0, 26):
             ret = sshObjRoot.prompt(10)
             print("--execCmdRoot --exec--%d--%s--%s" % (i, str(ret), host))
             if ret == True:
