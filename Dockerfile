@@ -18,7 +18,7 @@ RUN export \
 		GOOS="$(go env GOOS)" \
 		GOARCH="$(go env GOARCH)" \
 		GOHOSTOS="$(go env GOHOSTOS)" \
-		GOHOSTARCH="$(go env GOHOSTARCH)" \
+		GOHOSTARCH="$(go env GOHOSTARCH)"; \
     echo '042fba357210816160341f1002440550e952eb12678f7c9e7e9d389437942550 /dfiles/go1.11.2.src.tar.gz' | sha256sum -c -; \
 	tar -C /usr/local -xzf /dfiles/go1.11.2.src.tar.gz; \
 	cd /usr/local/go/src; \
@@ -39,7 +39,7 @@ ADD ./requirements.txt /app
 #RUN apk --update add gcc linux-headers
 RUN pip3 install -r /app/requirements.txt \
 #RUN pip3 install --no-cache-dir --no-index --find-links=/dfiles/packages -r requirements.txt \
-    && rm -r /dfiles/packages
+    && rm -r /dfiles
 ADD ./appdc /app/appdc
 ADD ./manage.py /app
 ADD ./crun.py /app
