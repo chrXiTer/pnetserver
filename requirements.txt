@@ -1,12 +1,11 @@
-
-sphinx
 flask
 Flask-Script
 flask_bootstrap
 flask-cors
 simplejson
-HTML2Text
 pexpect
+#sphinx
+#HTML2Text
 #urllib3
 #nose
 #bs4
