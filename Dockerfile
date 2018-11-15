@@ -1,4 +1,4 @@
-FROM python:3.7-alpine3.8
+FROM python:3.7.1-alpine3.8
 LABEL maintainer cx<cx@663.cn>001
 
 WORKDIR /app
@@ -7,18 +7,19 @@ ADD ./dfiles /dfiles
 # 添加 golang
 # 根据 python:3.7-alpine3.8 的 Dockerfile 内容 
 # 移除 golang:1.11.2-alpine3.8 Dockerfile 中不不要的内容添加到下面
+# vim 一行是后面自己需要的软件，放这里统一安装
 RUN [ ! -e /etc/nsswitch.conf ] && echo 'hosts: files dns' > /etc/nsswitch.conf
 RUN set -eux; \
 	apk add --no-cache --virtual .build-deps \
-		bash musl-dev openssl go; \
-	export \
+	    dropbear-ssh dropbear-scp vim \
+		bash musl-dev openssl go; 
+RUN export \
 		GOROOT_BOOTSTRAP="$(go env GOROOT)" \
 		GOOS="$(go env GOOS)" \
 		GOARCH="$(go env GOARCH)" \
 		GOHOSTOS="$(go env GOHOSTOS)" \
 		GOHOSTARCH="$(go env GOHOSTARCH)" \
-	; \
-	echo '042fba357210816160341f1002440550e952eb12678f7c9e7e9d389437942550 /dfiles/go1.11.2.src.tar.gz' | sha256sum -c -; \
+    echo '042fba357210816160341f1002440550e952eb12678f7c9e7e9d389437942550 /dfiles/go1.11.2.src.tar.gz' | sha256sum -c -; \
 	tar -C /usr/local -xzf /dfiles/go1.11.2.src.tar.gz; \
 	cd /usr/local/go/src; \
 	./make.bash; \
@@ -37,10 +38,8 @@ RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 ADD ./requirements.txt /app
 #RUN apk --update add gcc linux-headers
 #RUN pip3 install -r /app/requirements.txt
-RUN apk --update add dropbear-ssh dropbear-scp vim\
-    && pip3 install --no-cache-dir --no-index --find-links=/dfiles/packages -r requirements.txt \
-    && rm -r /app/packages
-LABEL vv1="001"
+RUN pip3 install --no-cache-dir --no-index --find-links=/dfiles/packages -r requirements.txt \
+    && rm -r /dfiles/packages
 ADD ./appdc /app/appdc
 ADD ./manage.py /app
 ADD ./crun.py /app
