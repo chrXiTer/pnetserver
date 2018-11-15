@@ -37,8 +37,8 @@ RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 #
 ADD ./requirements.txt /app
 #RUN apk --update add gcc linux-headers
-#RUN pip3 install -r /app/requirements.txt
-RUN pip3 install --no-cache-dir --no-index --find-links=/dfiles/packages -r requirements.txt \
+RUN pip3 install -r /app/requirements.txt \
+#RUN pip3 install --no-cache-dir --no-index --find-links=/dfiles/packages -r requirements.txt \
     && rm -r /dfiles/packages
 ADD ./appdc /app/appdc
 ADD ./manage.py /app
