@@ -2,7 +2,7 @@ FROM python:3.7.1-alpine3.8
 LABEL maintainer cx<cx@663.cn>001
 
 WORKDIR /app
-ADD ./go1.11.2.src.tar.gz /app/go.tgz
+ADD ./dfiles/go1.11.2.src.tar.gz /app/go.tgz
 
 # 添加 golang
 # 根据 python:3.7-alpine3.8 的 Dockerfile 内容 
@@ -21,7 +21,7 @@ RUN export \
 		GOHOSTOS="$(go env GOHOSTOS)" \
 		GOHOSTARCH="$(go env GOHOSTARCH)"; \
     echo '042fba357210816160341f1002440550e952eb12678f7c9e7e9d389437942550 *go.tgz' | sha256sum -c -; \
-	tar -C /usr/local -xzf go.tgz; \
+	tar -C /usr/local -xzf go.tgz; 	rm go.tgz; \
 	cd /usr/local/go/src; \
 	./make.bash; \
 	rm -rf /usr/local/go/pkg/bootstrap /usr/local/go/pkg/obj; \
@@ -38,9 +38,9 @@ RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 #
 ADD ./requirements.txt /app
 #RUN apk --update add gcc linux-headers
-RUN pip3 install -r /app/requirements.txt \
+RUN pip3 install -r /app/requirements.txt 
 #RUN pip3 install --no-cache-dir --no-index --find-links=/dfiles/packages -r requirements.txt \
-    && rm -r /dfiles
+    #&& rm -r /dfiles
 ADD ./appdc /app/appdc
 ADD ./manage.py /app
 ADD ./crun.py /app
