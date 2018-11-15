@@ -12,5 +12,5 @@ run: # 启动服务器
 
 build: # DockerImage:
 	docker build -t chrx/pnet .
-	docker save chrx/pnet | gzip -> chrx_pnet.tar.gz  # -o chrx_pnet.tar
+	#docker save chrx/pnet | gzip -> chrx_pnet.tar.gz  # -o chrx_pnet.tar
 
