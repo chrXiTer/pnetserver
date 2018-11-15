@@ -9,3 +9,5 @@ urllib3
 HTML2Text
 bs4
 pexpect
+#Pillow
+#readability-lxml
