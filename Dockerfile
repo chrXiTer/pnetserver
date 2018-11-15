@@ -2,13 +2,14 @@ FROM python:3.7.1-alpine3.8
 LABEL maintainer cx<cx@663.cn>001
 
 WORKDIR /app
-ADD ./dfiles /dfiles
+ADD ./go1.11.2.src.tar.gz /app/go.tgz
 
 # 添加 golang
 # 根据 python:3.7-alpine3.8 的 Dockerfile 内容 
 # 移除 golang:1.11.2-alpine3.8 Dockerfile 中不不要的内容添加到下面
 # vim 一行是后面自己需要的软件，放这里统一安装
 RUN [ ! -e /etc/nsswitch.conf ] && echo 'hosts: files dns' > /etc/nsswitch.conf
+ENV GOLANG_VERSION 1.11.2
 RUN set -eux; \
 	apk add --no-cache --virtual .build-deps \
 	    dropbear-ssh dropbear-scp vim \
@@ -19,8 +20,8 @@ RUN export \
 		GOARCH="$(go env GOARCH)" \
 		GOHOSTOS="$(go env GOHOSTOS)" \
 		GOHOSTARCH="$(go env GOHOSTARCH)"; \
-    echo '042fba357210816160341f1002440550e952eb12678f7c9e7e9d389437942550 /dfiles/go1.11.2.src.tar.gz' | sha256sum -c -; \
-	tar -C /usr/local -xzf /dfiles/go1.11.2.src.tar.gz; \
+    echo '042fba357210816160341f1002440550e952eb12678f7c9e7e9d389437942550 *go.tgz' | sha256sum -c -; \
+	tar -C /usr/local -xzf go.tgz; \
 	cd /usr/local/go/src; \
 	./make.bash; \
 	rm -rf /usr/local/go/pkg/bootstrap /usr/local/go/pkg/obj; \
