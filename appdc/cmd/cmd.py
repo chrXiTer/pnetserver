@@ -71,8 +71,9 @@ def func_JoinK8s(): # 加入集群
     cmd3="systemctl daemon-reload; systemctl restart kubelet"
     ssh_th.execCmd(hosts, dict1, '%s;%s;%s' % (cmd1, cmd2, cmd3))
 
-def funcScpFile(hosts): # 复制,某个文件夹
-    ssh_th.scpDir(hosts, dict1, '/home/nscc/th/', 'sh')
+def funcScpFileAndExeCmd(hosts): # 复制,某个文件夹
+    ssh_th.scpDir(hosts, dict1, '/home/nscc/th/tar/', 'chrx_quagga1.2-ap3.7.tar.gz')
+    ssh_th.execCmd(hosts, dict1, 'cd /home/nscc/th/tar; docker image load -i chrx_quagga1.2-ap3.7.tar.gz')
     #ssh_th.execCmd(hosts, dict1, 'cd /home/nscc/th/tar.o; ls | xargs -n 1 docker image load -i')
     #ssh_th.scpDir(hosts, dict1, '/home/nscc/th/', 'calico-2.6.11')
     #ssh_th.scpDir(hosts, dict1, '/home/nscc/th/', 'calico-3.3.0')
@@ -86,9 +87,10 @@ def main():
     #func_JoinK8s()
     # func_setK8sCadvisor() 一个主机只能执行一次
     
-    hosts = ['10.145.0.' + str(n) for n in range(11, 21) ]
-    func_resetK8s(hosts)
-    #
+    #hosts = ['10.145.0.' + str(n) for n in range(11, 21) ]
+    #func_resetK8s(hosts)
+    
+    funcScpFileAndExeCmd(hostsM.hosts)
     #func_cfgDocker(hostsM.hosts_cal2)
     #ssh_th.execCmd(hostsM.hosts, dict1, 'rm -r /var/etcd/calico-data')
     #ssh_th.execCmd(hostsM.hosts, dict1, 'chown -R nscc /home/nscc')
