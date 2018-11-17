@@ -11,6 +11,6 @@ run: # 启动服务器
 	python3 -B manage.py runserver -h 0.0.0.0
 
 build: # DockerImage:
-	docker build -t chrx/pnet .
+	docker build -t chrx/pnet3 .
 	#docker save chrx/pnet | gzip -> chrx_pnet.tar.gz  # -o chrx_pnet.tar
 
