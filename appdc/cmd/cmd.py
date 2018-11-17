@@ -1,5 +1,5 @@
 import simplejson as json
-import appdc.api.ssh_th as ssh_th
+import appdc.includes.th as ssh_th
 import appdc.cmd.hosts as hostsM
 
 # 001
