@@ -9,23 +9,11 @@ from .ssh import SshClient
 
 sshClient = SshClient()
 
-
-
-def _scpDirOrFile(hosts, dict1):
-    def _scpFToAHost(jsonStr): # 作为子进程执行函数，一个字符串参数方便传参数
-        jo = json.loads(jsonStr)
-        resultStr = sshClient.scpFileToAHost(\
-            jo['username'], jo['host'], jo['password'], jo['srcResDir'], jo['destResDir'])
-        return {resultStr:resultStr}
-    po=Pool(len(hosts))
-    for i in range(0, len(hosts)):
-        dict1["host"] = hosts[i]
-        jsonStr = json.dumps(dict1)
-        po.apply_async(_scpFToAHost, args=(jsonStr,))
-    po.close() 
-    po.join()
-
 retStrP = ""
+def cb(retStr):
+    global retStrP
+    retStrP = retStrP + retStr[0:1000]
+
 def execCmd(hosts, dict1, cmdStr, asRoot=True):
     print(str(hosts))
     print(str(dict1))
@@ -38,19 +26,35 @@ def execCmd(hosts, dict1, cmdStr, asRoot=True):
         else:
             resultStr = sshClient.execCmdCurrUser(jo['host'], jo['username'], jo['password'], jo['cmd'])
         return resultStr
-    def cb(retStr):
-        global retStrP
-        retStrP = retStrP + retStr[0:1000]
     dict1['cmd']=cmdStr
     po=Pool(len(hosts))
+    global retStrP
+    retStrP = ""
     for i in range(0, len(hosts)):
         dict1["host"] = hosts[i]
         jsonStr = json.dumps(dict1)
         po.apply_async(execToAHost, args=(jsonStr,asRoot), callback=cb)
     po.close() 
     po.join() 
-    retStr = "%s --crun.py execCmd %s -- complete" % (retStrP, cmdStr)
-    print(retStr)
+    retStr = "%s --crun.py execCmd %s -- complete" % (retStrP, cmdStr);print(retStr)
+    return retStr
+
+def _scpDirOrFile(hosts, dict1):
+    def _scpFToAHost(jsonStr): # 作为子进程执行函数，一个字符串参数方便传参数
+        jo = json.loads(jsonStr)
+        resultStr = sshClient.scpFileToAHost(\
+            jo['username'], jo['host'], jo['password'], jo['srcResDir'], jo['destResDir'])
+        return resultStr
+    po=Pool(len(hosts))
+    global retStrP
+    retStrP = ""
+    for i in range(0, len(hosts)):
+        dict1["host"] = hosts[i]
+        jsonStr = json.dumps(dict1)
+        po.apply_async(_scpFToAHost, args=(jsonStr,), callback=cb)
+    po.close() 
+    po.join()
+    retStr = "%s --_scpDirOrFile -- complete" % retStrP; print(retStr)
     return retStr
 
 def scpDir(hosts, dict1, parentDir, DirName):
@@ -58,11 +62,11 @@ def scpDir(hosts, dict1, parentDir, DirName):
     dict1['srcResDir'] = parentDir + DirName
     dict1['destResDir'] = parentDir
     _scpDirOrFile(hosts, dict1)
-    print("-- scpDir -- complete")
+    retStr = "-- scpDir -- complete"; print(retStr)
 
 def scpFile(hosts, dict1, DirPath, filename):
     execCmd(hosts, dict1, '/bin/rm -rf ' + DirPath + filename)
     dict1['srcResDir']= DirPath + filename
     dict1['destResDir']= DirPath + filename
     _scpDirOrFile(hosts, dict1)
-    print("-- scpFile -- complete")
+    retStr = "-- scpFile -- complete"; print(retStr)

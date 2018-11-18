@@ -23,13 +23,15 @@ def execCmd(jsonStr):
 @cross_origin()
 def scpDir(jsonStr):
     jo = json.loads(jsonStr)
-    thM.scpDir(jo['hosts'], jo['dict1'], jo['parentDir'], jo['DirName'])
+    retStr = thM.scpDir(jo['hosts'], jo['dict1'], jo['parentDir'], jo['DirName'])
+    return retStr
 
 @dispatcher.action("scpFile")
 @cross_origin()
 def scpFile(jsonStr):
     jo = json.loads(jsonStr)
-    thM.scpFile(jo['hosts'], jo['dict1'], jo['DirPath'], jo['filename'])
+    retStr = thM.scpFile(jo['hosts'], jo['dict1'], jo['DirPath'], jo['filename'])
+    return retStr
 
 
 
