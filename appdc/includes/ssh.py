@@ -42,7 +42,7 @@ class SshClient(object):
             print('--sudo_i-error- %s %s' % (host, str(e)))
         print('--sudo_i-ok- %s' % host)
     
-    def execCmd(self, host, sshObjRoot, cmd):
+    def _execHostCmd(self, host, sshObjRoot, cmd):
         sshObjRoot.sendline(cmd)
         retStrs = []
         for i in range(0, 20):
@@ -62,7 +62,7 @@ class SshClient(object):
             retStrs.append('---execCmdRoot-start---%s' % host); print(retStrs[-1])
             sshObj = self.sshLogin(host, username, password)
             self.sudo_i(sshObj, password, host)
-            retStr2 = self.execCmd(host, sshObj, cmd)
+            retStr2 = self._execHostCmd(host, sshObj, cmd)
             retStrs.append(retStr2) # 信息已经 print 过，不再 print
         except Exception as e:
             retStrs.append('--execCmdRoot--error-- %s' % str(e)); print(retStrs[-1])
@@ -74,7 +74,7 @@ class SshClient(object):
         try:
             retStrs.append('---execCmdCurrUser-11---%s' % host); print(retStrs[-1])
             sshObj = self.sshLogin(host, username, password)
-            self.execCmd(host, sshObj, cmd)
+            self._execHostCmd(host, sshObj, cmd)
         except Exception as e:
             retStrs.append('--execCmdCurrUser--error-- %s' % str(e)); print(retStrs[-1])
         retStrs.append('--execCmdCurrUser--ok--'); print(retStrs[-1])
