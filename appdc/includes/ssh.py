@@ -44,25 +44,30 @@ class SshClient(object):
     
     def execCmd(self, host, sshObjRoot, cmd):
         sshObjRoot.sendline(cmd)
-        for i in range(0, 26):
-            ret = sshObjRoot.prompt(10)
-            print("--execCmdRoot --exec--%d--%s--%s" % (i, str(ret), host))
+        retStrs = []
+        for i in range(0, 20):
+            ret = sshObjRoot.prompt(15)
+            retStrs.append("--execCmdRoot --exec--%d--%s--%s" % (i, str(ret), host)); print(retStrs[-1])
             if ret == True:
                 break
             sshObjRoot.sendline('')
+        return "\n".join(retStrs)
         #print(str(sshObjRoot.before))
         #print(str(sshObjRoot.buffer))
         #print(str(sshObjRoot.after))
 
     def execCmdRoot(self, host, username, password, cmd):
+        retStrs = []
         try:
-            print('---execCmdRoot-11---%s' % host)
+            retStrs.append('---execCmdRoot-start---%s' % host); print(retStrs[-1])
             sshObj = self.sshLogin(host, username, password)
             self.sudo_i(sshObj, password, host)
-            self.execCmd(host, sshObj, cmd)
+            retStr2 = self.execCmd(host, sshObj, cmd)
+            retStrs.append(retStr2) # 信息已经 print 过，不再 print
         except Exception as e:
-            print('--execCmdRoot--error-- %s' % str(e))
-        print('--execCmdRoot--ok--')
+            retStrs.append('--execCmdRoot--error-- %s' % str(e)); print(retStrs[-1])
+        retStrs.append('--execCmdRoot--ok--'); print(retStrs[-1])
+        return "\n".join(retStrs)
     
     def execCmdCurrUser(self, host, username, password, cmd):
         try:

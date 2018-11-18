@@ -9,8 +9,9 @@ from .ssh import SshClient
 
 sshClient = SshClient()
 
-def execCmdToAHost(jsonStr, asRoot=False):
+def _execCmdToAHost(jsonStr, asRoot=False):
     jo = json.loads(jsonStr)
+    resultStr = ""
     if asRoot:
         resultStr = sshClient.execCmdRoot(jo['host'], jo['username'], jo['password'], jo['cmd'])
     else:
@@ -34,15 +35,19 @@ def _scpDirOrFile(hosts, dict1):
     po.join()
 
 def execCmd(hosts, dict1, cmdStr, asRoot=True):
+    retStrP = ""
+    def cb(retStr):
+        global retStrP
+        retStrP = retStrP + retStr[0:1000]
     dict1['cmd']=cmdStr
     po=Pool(len(hosts))
     for i in range(0, len(hosts)):
         dict1["host"] = hosts[i]
         jsonStr = json.dumps(dict1)
-        po.apply_async(execCmdToAHost, args=(jsonStr,asRoot))
+        po.apply_async(_execCmdToAHost, args=(jsonStr,asRoot), callback=cb)
     po.close() 
     po.join() 
-    retStr = "--crun.py execCmd %s -- complete" % cmdStr
+    retStr = "%s --crun.py execCmd %s -- complete" % (retStrP, cmdStr)
     print(retStr)
     return retStr
 
