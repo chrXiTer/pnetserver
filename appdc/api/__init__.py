@@ -44,6 +44,7 @@ dispatcher = Dispatcher()
 def index(action):
     params = request.values.to_dict()
     resultObj = dispatcher.dispatch(action, params)
+    print("\n********\n")
     print(str(resultObj))
     return jsonify(resultObj)
 
