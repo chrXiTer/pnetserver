@@ -16,7 +16,7 @@ def _execCmdToAHost(jsonStr, asRoot=False):
         resultStr = sshClient.execCmdRoot(jo['host'], jo['username'], jo['password'], jo['cmd'])
     else:
         resultStr = sshClient.execCmdCurrUser(jo['host'], jo['username'], jo['password'], jo['cmd'])
-    return {resultStr:resultStr}
+    return resultStr
 
 # 作为子进程执行函数，一个字符串参数方便传参数
 def _scpFToAHost(jsonStr):

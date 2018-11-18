@@ -70,14 +70,15 @@ class SshClient(object):
         return "\n".join(retStrs)
     
     def execCmdCurrUser(self, host, username, password, cmd):
+        retStrs = []
         try:
-            print('---execCmdCurrUser-11---%s' % host)
+            retStrs.append('---execCmdCurrUser-11---%s' % host); print(retStrs[-1])
             sshObj = self.sshLogin(host, username, password)
             self.execCmd(host, sshObj, cmd)
         except Exception as e:
-            print('--execCmdCurrUser--error-- %s' % str(e))
-        print('--execCmdCurrUser--ok--')
-
+            retStrs.append('--execCmdCurrUser--error-- %s' % str(e)); print(retStrs[-1])
+        retStrs.append('--execCmdCurrUser--ok--'); print(retStrs[-1])
+        return "\n".join(retStrs)
 
     def checkFirst(self, host, username, password):
         try:
