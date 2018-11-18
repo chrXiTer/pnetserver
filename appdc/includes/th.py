@@ -34,8 +34,8 @@ def _scpDirOrFile(hosts, dict1):
     po.close() 
     po.join()
 
+retStrP = ""
 def execCmd(hosts, dict1, cmdStr, asRoot=True):
-    retStrP = ""
     def cb(retStr):
         global retStrP
         retStrP = retStrP + retStr[0:1000]
