@@ -4,9 +4,8 @@ LABEL maintainer cx<cx@663.cn>001
 WORKDIR /app
 
 RUN set -eux; \
-	apk add --no-cache --virtual .build-deps \
-	    dropbear-ssh dropbear-scp vim; \
-	apk del .build-deps;
+	apk add --no-cache --virtual \
+	    dropbear-ssh dropbear-scp vim;
 
 #
 # 添加自己的代码
@@ -86,10 +85,6 @@ ENV GOPATH /go
 ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
 
 RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
-
-
-
-
 
 
 
