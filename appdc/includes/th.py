@@ -36,7 +36,8 @@ def execCmd(hosts, dict1, cmdStr, asRoot=True):
         po.apply_async(execToAHost, args=(jsonStr,asRoot), callback=cb)
     po.close() 
     po.join() 
-    retStr = "%s --crun.py execCmd %s -- complete" % (retStrP, cmdStr);print(retStr)
+    retStr0 = "--crun.py execCmd %s -- complete", cmdStr; print(retStr0)
+    retStr = "%s\n%s" % (retStrP, retStr0)
     return retStr
 
 def _scpDirOrFile(hosts, dict1):
@@ -54,19 +55,24 @@ def _scpDirOrFile(hosts, dict1):
         po.apply_async(_scpFToAHost, args=(jsonStr,), callback=cb)
     po.close() 
     po.join()
-    retStr = "%s --_scpDirOrFile -- complete" % retStrP; print(retStr)
+    retStr0 = "--_scpDirOrFile -- complete"; print(retStr0)
+    retStr = "%s\n%s" % (retStrP, retStr0)
     return retStr
 
 def scpDir(hosts, dict1, parentDir, DirName):
     execCmd(hosts, dict1, '/bin/rm -rf '+ parentDir + DirName)
     dict1['srcResDir'] = parentDir + DirName
     dict1['destResDir'] = parentDir
-    _scpDirOrFile(hosts, dict1)
-    retStr = "-- scpDir -- complete"; print(retStr)
+    retStrF = _scpDirOrFile(hosts, dict1)
+    retStr0 = "-- scpDir -- complete"; print(retStr0)
+    retStr = "%s\n%s" % (retStrF, retStr0)
+    return retStr
 
 def scpFile(hosts, dict1, DirPath, filename):
     execCmd(hosts, dict1, '/bin/rm -rf ' + DirPath + filename)
     dict1['srcResDir']= DirPath + filename
     dict1['destResDir']= DirPath + filename
-    _scpDirOrFile(hosts, dict1)
-    retStr = "-- scpFile -- complete"; print(retStr)
+    retStrF = _scpDirOrFile(hosts, dict1)
+    retStr0 = "-- scpFile -- complete"; print(retStr0)
+    retStr = "%s\n%s" % (retStrF, retStr0)
+    return retStr
