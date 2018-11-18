@@ -44,7 +44,6 @@ dispatcher = Dispatcher()
 def index(action):
     params = request.values.to_dict()
     resultObj = dispatcher.dispatch(action, params)
-    return resultObj
-    #return jsonify(resultObj)
+    return jsonify({"ret":resultObj})
 
 import appdc.api.ssh_th
