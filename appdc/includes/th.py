@@ -27,6 +27,9 @@ def _scpDirOrFile(hosts, dict1):
 
 retStrP = ""
 def execCmd(hosts, dict1, cmdStr, asRoot=True):
+    print(str(hosts))
+    print(str(dict1))
+    print(str(cmdStr))
     def execToAHost(jsonStr, asRoot=False):
         jo = json.loads(jsonStr)
         resultStr = ""
