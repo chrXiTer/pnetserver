@@ -17,6 +17,10 @@ def execCmd(jsonStr):
     retStr = thM.execCmd(jo['hosts'], jo['dict1'], jo['cmdStr'], asRoot=True)
     return retStr
 
+@dispatcher.action("scpDir")
+def scpDir(jsonStr):
+    jo = json.loads(jsonStr)
+    thM.scpDir(jo['hosts'], jo['dict1'], jo['parentDir'], jo['DirName'])
 
 @dispatcher.action("scpFile")
 def scpFile(jsonStr):
