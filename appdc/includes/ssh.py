@@ -3,6 +3,7 @@ from pexpect import pxssh, TIMEOUT
 #001
 class SshClient(object):
     def scpFileToAHost(self, username, host, password, srcResDir, destResDir,timeout=None):
+        print("\n***12345*****")
         try:      
             cmd='scp -r {srcResDir} {username}@{host}:{destResDir} '\
                 .format(srcResDir=srcResDir, username=username, host=host, destResDir=destResDir)

@@ -46,6 +46,8 @@ def index(action):
     resultObj = dispatcher.dispatch(action, params)
     print("\n********\n")
     print(str(resultObj))
-    return jsonify(resultObj)
+    print(type(resultObj))
+    #return jsonify(resultObj)
+    return resultObj
 
 import appdc.api.ssh_th
