@@ -14,9 +14,8 @@ def cb(retStr):
     global retStrP
     retStrP = retStrP + retStr[0:100]
 
-
 def execToAHost(jsonStr, asRoot=False):
-    print("\*****444444***\n")
+    print("\n*****444444***\n")
     jo = json.loads(jsonStr)
     resultStr = ""
     if asRoot:
@@ -28,20 +27,7 @@ def execToAHost(jsonStr, asRoot=False):
 def execCmd(hosts, dict1, cmdStr, asRoot=True):
     print(str(hosts))
     print(str(dict1))
-    print(str(cmdStr))
-    '''def execToAHost(jsonStr, asRoot=False):
-        print("\*****444444***\n")
-        jo = json.loads(jsonStr)
-        resultStr = ""
-        if asRoot:
-            resultStr = sshClient.execCmdRoot(jo['host'], jo['username'], jo['password'], jo['cmd'])
-        else:
-            resultStr = sshClient.execCmdCurrUser(jo['host'], jo['username'], jo['password'], jo['cmd'])
-        return resultStr
-    def cb(retStr):
-        global retStrP
-        retStrP = retStrP + retStr[0:1000] 
-    '''   
+    print(str(cmdStr)) 
     dict1['cmd']=cmdStr
     po=Pool(len(hosts))
     global retStrP
@@ -49,7 +35,7 @@ def execCmd(hosts, dict1, cmdStr, asRoot=True):
     for i in range(0, len(hosts)):
         dict1["host"] = hosts[i]
         jsonStr = json.dumps(dict1)
-        print("\*****3333333***\n")
+        print("\n*****3333333***\n")
         po.apply_async(execToAHost, args=(jsonStr, asRoot, ), callback=cb)
     po.close() 
     po.join() 
@@ -57,23 +43,15 @@ def execCmd(hosts, dict1, cmdStr, asRoot=True):
     retStr = "%s\n%s" % (retStrP, retStr0)
     return retStr
 
-def _scpFToAHost(jsonStr): # ?~\为?~P?~[?~K?~I??~L?~G??~U??~L?~@个?~W符串?~O~B?~U??~V?便?| ?~O~B?~U?
-    print("\*****111111****\n")
+def _scpFToAHost(jsonStr): # 作为子进程执行函数，一个字符串参数方便传参数
+    print("\n*****111111****\n")
     jo = json.loads(jsonStr)
     resultStr = sshClient.scpFileToAHost(\
         jo['username'], jo['host'], jo['password'], jo['srcResDir'], jo['destResDir'])
-    print("\*****222222****\n")
+    print("\n*****222222****\n")
     return resultStr
 
-
 def _scpDirOrFile(hosts, dict1):
-    def _scpFToAHost(jsonStr): # 作为子进程执行函数，一个字符串参数方便传参数
-        print("\*****111111****\n")
-        jo = json.loads(jsonStr)
-        resultStr = sshClient.scpFileToAHost(\
-            jo['username'], jo['host'], jo['password'], jo['srcResDir'], jo['destResDir'])
-        print("\*****222222****\n")
-        return resultStr
     po=Pool(len(hosts))
     global retStrP
     retStrP = ""
