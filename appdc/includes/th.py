@@ -65,19 +65,19 @@ def _scpDirOrFile(hosts, dict1):
     retStr = "%s\n%s" % (retStrP, retStr0)
     return retStr
 
-def scpDir(hosts, dict1, parentDir, DirName):
-    execCmd(hosts, dict1, '/bin/rm -rf '+ parentDir + DirName)
-    dict1['srcResDir'] = parentDir + DirName
+def scpDir(hosts, dict1, parentDir, dirName):
+    execCmd(hosts, dict1, '/bin/rm -rf '+ parentDir + dirName)
+    dict1['srcResDir'] = parentDir + dirName
     dict1['destResDir'] = parentDir
     retStrF = _scpDirOrFile(hosts, dict1)
     retStr0 = "-- scpDir -- complete"; print(retStr0)
     retStr = "%s\n%s" % (retStrF, retStr0)
     return retStr
 
-def scpFile(hosts, dict1, DirPath, filename):
-    execCmd(hosts, dict1, '/bin/rm -rf ' + DirPath + filename)
-    dict1['srcResDir']= DirPath + filename
-    dict1['destResDir']= DirPath + filename
+def scpFile(hosts, dict1, dirPath, filename):
+    execCmd(hosts, dict1, '/bin/rm -rf ' + dirPath + filename)
+    dict1['srcResDir']= dirPath + filename
+    dict1['destResDir']= dirPath + filename
     retStrF = _scpDirOrFile(hosts, dict1)
     retStr0 = "-- scpFile -- complete"; print(retStr0)
     retStr = "%s\n%s" % (retStrF, retStr0)
