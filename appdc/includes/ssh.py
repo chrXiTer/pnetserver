@@ -53,9 +53,9 @@ class SshClient(object):
                 break
             sshObjRoot.sendline('')
         print(str(sshObjRoot.before))
-        print(str(sshObjRoot.buffer))
+        #print(str(sshObjRoot.buffer))
         print(str(sshObjRoot.after))
-        return "\n".join(retStrs), sshObjRoot.before
+        return "\n".join(retStrs), sshObjRoot.buffer
 
 
     def execCmdRoot(self, host, username, password, cmd):
