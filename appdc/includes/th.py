@@ -12,7 +12,7 @@ sshClient = SshClient()
 retStrP = ""
 def cb(retStr):
     global retStrP
-    retStrP = retStrP + retStr[0:100]
+    retStrP = retStrP + retStr[1][0:100]
 
 def execToAHost(jsonStr, asRoot=False):
     #print("\n*****444444***\n")
@@ -50,7 +50,7 @@ def _scpFToAHost(jsonStr): # 作为子进程执行函数，一个字符串参数
     resultStr = sshClient.scpFileToAHost(\
         jo['username'], jo['host'], jo['password'], jo['srcResDir'], jo['destResDir'])
     print("\n*****222222****\n")
-    return resultStr
+    return resultStr, ""
 
 def _scpDirOrFile(hosts, dict1):
     po=Pool(len(hosts))
