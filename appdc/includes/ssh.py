@@ -84,6 +84,7 @@ class SshClient(object):
         except Exception as e:
             retStrs.append('--execCmdCurrUser--error-- %s' % str(e)); print(retStrs[-1])
         retStrs.append('--execCmdCurrUser--ok--'); print(retStrs[-1])
+        print(cmdout)
         return "\n".join(retStrs), cmdout
 
     def checkFirst(self, host, username, password):
