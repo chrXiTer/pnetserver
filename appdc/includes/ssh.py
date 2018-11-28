@@ -52,10 +52,11 @@ class SshClient(object):
             if ret == True:
                 break
             sshObjRoot.sendline('')
+        print(str(sshObjRoot.before))
+        print(str(sshObjRoot.buffer))
+        print(str(sshObjRoot.after))
         return "\n".join(retStrs), sshObjRoot.after
-        #print(str(sshObjRoot.before))
-        #print(str(sshObjRoot.buffer))
-        #print(str(sshObjRoot.after))
+
 
     def execCmdRoot(self, host, username, password, cmd):
         retStrs = []
