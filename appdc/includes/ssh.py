@@ -52,7 +52,7 @@ class SshClient(object):
             if ret == True:
                 break
             sshObjRoot.sendline('')
-        print(str(sshObjRoot.before))
+        #print(str(sshObjRoot.before))
         #print(str(sshObjRoot.buffer))
         #print(str(sshObjRoot.after))
         return "\n".join(retStrs), str(sshObjRoot.before)
@@ -70,7 +70,7 @@ class SshClient(object):
         except Exception as e:
             retStrs.append('--execCmdRoot--error-- %s' % str(e)); print(retStrs[-1])
         retStrs.append('--execCmdRoot--ok--'); print(retStrs[-1])
-        print(cmdout)
+        #print(cmdout)
         return "\n".join(retStrs), cmdout
     
     def execCmdCurrUser(self, host, username, password, cmd):
@@ -84,7 +84,7 @@ class SshClient(object):
         except Exception as e:
             retStrs.append('--execCmdCurrUser--error-- %s' % str(e)); print(retStrs[-1])
         retStrs.append('--execCmdCurrUser--ok--'); print(retStrs[-1])
-        print(cmdout)
+        #print(cmdout)
         return "\n".join(retStrs), cmdout
 
     def checkFirst(self, host, username, password):
