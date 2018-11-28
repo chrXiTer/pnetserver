@@ -15,19 +15,20 @@ def cb(retStr):
     retStrP = retStrP + retStr[0:100]
 
 def execToAHost(jsonStr, asRoot=False):
-    print("\n*****444444***\n")
+    #print("\n*****444444***\n")
     jo = json.loads(jsonStr)
     resultStr = ""
+    cmdOut = ""
     if asRoot:
-        resultStr = sshClient.execCmdRoot(jo['host'], jo['username'], jo['password'], jo['cmd'])
+        resultStr, cmdOut = sshClient.execCmdRoot(jo['host'], jo['username'], jo['password'], jo['cmd'])
     else:
-        resultStr = sshClient.execCmdCurrUser(jo['host'], jo['username'], jo['password'], jo['cmd'])
-    return resultStr
+        resultStr, cmdOut = sshClient.execCmdCurrUser(jo['host'], jo['username'], jo['password'], jo['cmd'])
+    return resultStr, cmdOut
 
 def execCmd(hosts, dict1, cmdStr, asRoot=True):
-    print(str(hosts))
-    print(str(dict1))
-    print(str(cmdStr)) 
+    #print(str(hosts))
+    #print(str(dict1))
+    #print(str(cmdStr)) 
     dict1['cmd']=cmdStr
     po=Pool(len(hosts))
     global retStrP

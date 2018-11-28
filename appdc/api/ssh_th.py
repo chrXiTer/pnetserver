@@ -19,6 +19,12 @@ def execCmd(jsonStr):
     retStr = thM.execCmd(jo['hosts'], jo['dict1'], jo['cmdStr'], asRoot=True)
     return (retStr)
 
+@dispatcher.action("execCmdAHost") # 会得到前10000字符的输出值
+@cross_origin()
+def execCmdAHost(jsonStr):
+    retStr, out = thM.execToAHost(jsonStr, asRoot=True)
+    return (retStr, out)
+
 @dispatcher.action("scpDir")
 @cross_origin()
 def scpDir(jsonStr):
