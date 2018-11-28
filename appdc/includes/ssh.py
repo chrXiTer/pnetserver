@@ -70,6 +70,7 @@ class SshClient(object):
         except Exception as e:
             retStrs.append('--execCmdRoot--error-- %s' % str(e)); print(retStrs[-1])
         retStrs.append('--execCmdRoot--ok--'); print(retStrs[-1])
+        print(cmdout)
         return "\n".join(retStrs), cmdout
     
     def execCmdCurrUser(self, host, username, password, cmd):
