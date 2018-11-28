@@ -53,8 +53,8 @@ class SshClient(object):
                 break
             sshObjRoot.sendline('')
         #print(str(sshObjRoot.before))
-        print(str(sshObjRoot.buffer))
-        #print(str(sshObjRoot.after))
+        #print(str(sshObjRoot.buffer))
+        print(str(sshObjRoot.after))
         return "\n".join(retStrs), str(sshObjRoot.after)
 
 
