@@ -23,7 +23,7 @@ def execCmd(jsonStr):
 @cross_origin()
 def execCmdAHost(jsonStr):
     retStr, out = thM.execToAHost(jsonStr, asRoot=True)
-    return ( {retStr:retStr, out:out})
+    return json.dump({retStr:retStr, out:out})
 
 @dispatcher.action("scpDir")
 @cross_origin()
