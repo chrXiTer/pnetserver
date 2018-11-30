@@ -44,20 +44,34 @@ docker exec -it c11 ping c21
 
 ```sh
 
-docker network create --driver overlay --attachable  L2onet
-
 # 10.144.0.26
+# docker network create --driver overlay --attachable  L2onet
+docker network create --driver overlay --attachable --subnet 10.190.64.0/19 --gateway 10.190.64.1 L2onet
 docker run -itd --network L2onet --name o11 alpine:3.8 sh
 docker run -itd --network L2onet --name o12 alpine:3.8 sh
-docker exec -it o11 ip addr # 10.0.1.2/24
-docker exec -it o12 ip addr # 10.0.1.3/24
+docker exec -it o11 ip addr | grep 10.190; \
+docker exec -it o12 ip addr | grep 10.190
+# 10.190.64.2/24 
+# 10.190.64.3/24
 
 # 10.144.0.27
 docker run -itd --network L2onet --name o21 alpine:3.8 sh
-docker exec -it o21 ip addr # 10.0.1.4/24
+docker exec -it o21 ip addr | grep 10.190; # 10.190.64.4/24
 
-docker exec -it o11 ping o12
-docker exec -it o11 ping 10.0.1.4  #o21   开始测得时候是通的，后来不通了
+docker exec -it o11 ping -c 3 o12;\
+docker exec -it o11 ping -c 3 o21   #开始测得时候是通的，后来不通了
+docker exec -it o11 ping -c 3 10.190.64.3;\
+docker exec -it o11 ping -c 3 10.190.64.4   #开始测得时候是通的，后来不通了
+
+
+# 删除
+docker rm -f o21
+docker network rm docker_gwbridge 
+
+docker rm -f o11
+docker rm -f o12
+docker network rm docker_gwbridge 
+docker network rm L2onet
 
 ```
 
@@ -107,30 +121,27 @@ docker run -itd -name g2121 --network L3net-2 nginx:1.15-alpine sh
 docker exec -it g2121 ip addr # 10.190.166.66/32
 
 #--10.145.0.26
-docker run -itd --name g1231 --network L3net-2 nginx:1.15-alpine sh
-docker exec -it g1231 ip addr # 10.190.177.214/32
+docker run -itd --name g1231 --network L3net-1 nginx:1.15-alpine sh
+docker exec -it g1231 ip addr # 10.190.177.215/32
 ```
 
 ###　测试联通性1
 
 ```sh
 #---10.144.0.26
-#docker exec -it g1111 ping -c 3 g2111;\
-#docker exec -it g1111 ping -c 3 g2121;\
-#docker exec -it g1111 ping -c 3 g1231
-docker exec -it g1111 ping -c 3 10.190.184.203;\
-docker exec -it g1111 ping -c 3 10.190.166.66;\
-docker exec -it g1111 ping -c 3 10.190.177.214
+docker exec -it g1111 ping -c 3 g2111;\
+docker exec -it g1111 ping -c 3 g2121;\
+docker exec -it g1111 ping -c 3 g1231
 
-# /home/nscc/th/calico-2.6.11/calicoctl get profile --config=/home/nscc/th/calico-2.6.11/calico-1.cfg
+# /home/nscc/th/calico-2.6.11/calicoctl get profile L3net-2 --config=/home/nscc/th/calico-2.6.11/calico-1.cfg -o yaml
 
 cat <<EOF | /home/nscc/th/calico-2.6.11/calicoctl apply --config=/home/nscc/th/calico-2.6.11/calico-1.cfg -f -
 - apiVersion: v1
   kind: profile
   metadata:
-    name: L3net-1
+    name: L3net-2
     tags:
-    - L3net-1
+    - L3net-2
   spec:
     egress:
     - action: allow
@@ -140,17 +151,22 @@ cat <<EOF | /home/nscc/th/calico-2.6.11/calicoctl apply --config=/home/nscc/th/c
     - action: allow
       destination: {}
       source:
-        tag: L3net-1
-        ingress:
-    - action: allow
+        tag: L3net-2
+    - action: allow  # 这一块是新加的，前面是原来的
       destination: {}
       source:
-        tag: L3net-2
+        tag: L3net-1
 EOF
 
-docker exec -it g1111 ping -c 3 g2111;\
-docker exec -it g1111 ping -c 3 g2121;\
-docker exec -it g1111 ping -c 3 g1231
+
+
+# docker exec -it g1111 ping -c 3 g2111;\
+# docker exec -it g1111 ping -c 3 g2121;\
+# docker exec -it g1111 ping -c 3 g1231
+# 不同子网不能dns解析
+docker exec -it g1111 ping -c 3 10.190.184.203;\
+docker exec -it g1111 ping -c 3 10.190.166.66;\
+docker exec -it g1111 ping -c 3 10.190.177.215
 
 ```
 
@@ -160,40 +176,38 @@ docker exec -it g1111 ping -c 3 g1231
 #---10.144.0.26
 docker exec -it g2111 ping -c 3 g2121
 
+# ip route | grep 10.190.166.
 
 cat <<EOF | /home/nscc/th/calico-2.6.11/calicoctl apply --config=/home/nscc/th/calico-2.6.11/calico-1.cfg -f -
 - apiVersion: v1
   kind: profile
   metadata:
-    name: L3net-1
+    name: L3net-2
     tags:
-    - L3net-1
+    - L3net-2
   spec:
     egress:
     - action: allow
       destination: {}
       source: {}
     ingress:
-    - action: allow
-      destination: {}
+    - action: deny  # 这一块是新加的，放到最后会无效（calico应该是依次匹配，先匹配到的生效）
+      destination: 
+        nets: 
+        - 10.190.166.64/26
       source:
-        tag: L3net-1
-        ingress:
+        nets: 
+        - 10.190.184.203/32
     - action: allow
       destination: {}
       source:
         tag: L3net-2
-    - action: deny
-      destination: {
-        nets: 
-        - 10.0.
-      }
+    - action: allow  # 这一块是之前新加的
+      destination: {}
       source:
-        nets: 
-        - 10.0.20.0/24
+        tag: L3net-1
 EOF
 ```
-
 
 
 ## 5
@@ -278,4 +292,51 @@ date "+%Y-%m-%d %H:%M:%S %N"
 docker exec -it z-11 ip addr  # 10.190.184.201/32
 docker exec -it z-11 ping 10.144.0.26 # 可以ping通
 docker exec -it z-11 ping 10.145.0.26 # 可以ping通
+```
+
+## 8
+
+1111
+
+## 9
+
+1111
+
+## 10
+
+在 11 的基础上测试
+
+kubectl create ns tns
+date "+%Y-%m-%d %H:%M:%S %N";\
+kubectl run --namespace=tns tdeploy --replicas=1000 --image=nginx:1.15-alpine;\
+date "+%Y-%m-%d %H:%M:%S %N";
+kubectl get pods --namespace=tns
+kubectl get deploy --namespace=tns
+kubectl scale --replicas=2000 deployment/tdeploy --namespace=tns
+
+
+## 11
+
+
+kubectl create ns testns;\
+kubectl run --namespace=testns testdeploy --replicas=10 --image=nginx:1.15-alpine;\
+
+kubectl get pods --all-namespaces
+
+n-145-25   
+n-145-25 
+n-145-25  
+n-144-25  
+n-144-25
+n-145-24   
+n-145-24  
+n-145-24  
+n-144-23   
+n-144-23   
+
+   
+
+
+
+
 
