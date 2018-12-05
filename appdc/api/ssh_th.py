@@ -39,11 +39,6 @@ def scpFile(jsonStr):
     retStr = thM.scpFile(jo['hosts'], jo['dict1'], jo['dirPath'], jo['filename'])
     return (retStr)
 
-"""  
-docker run -d --network L2onet --name loop --security-opt seccomp:unconfined alpine:3.8 \
-    /bin/sh -c 'i=0; while true; do echo $i; i=$(expr $i + 1); sleep 1; done'" 
-"""
-         
 def genSnapshot_() # srcHost 生成快照并停止
     cmd = 'docker checkpoint create --checkpoint-dir=/root/tmp %s checkpoint2', jo['containerName']
     resultStr, cmdOut = thM.sshClient.execCmdRoot(jo['srcHost'], jo['username'], jo['password'], cmd) 
@@ -68,10 +63,8 @@ def liveMigration(jsonStr):
     # 复制文件
     cmd=""
     resultStr, cmdOut = thM.sshClient.execCmdRoot(jo['descHost'], jo['username'], jo['password'], cmd)
-    #resultStr = sshClient.scpFileToAHost(\
-    #    jo['username'], jo['host'], jo['password'], jo['srcResDir'], jo['destResDir']) 
+    # TODO
 
-    # 
     retStr, cmdOut = restore_(jo)
     ret.push({"retStr":retStr, "out":out})
     return json.dumps(ret)
@@ -107,7 +100,11 @@ def applySnapshot_(jo)
     cmd = "docker start --checkpoint-dir=/root/tmp --checkpoint=checkpoint2 %s", jo['containerName']
     resultStr, cmdOut = thM.sshClient.execCmdRoot(jo['descHost'], jo['username'], jo['password'], cmd) 
  """
-
+"""  
+docker run -d --network L2onet --name loop --security-opt seccomp:unconfined alpine:3.8 \
+    /bin/sh -c 'i=0; while true; do echo $i; i=$(expr $i + 1); sleep 1; done'" 
+"""
+         
 
 
 """ 

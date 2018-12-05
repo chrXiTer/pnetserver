@@ -9,6 +9,16 @@ from .ssh import SshClient
 
 sshClient = SshClient()
 
+def hostToPasswod(host):
+    n2Str = host.split('.')[2]
+    n2 = int(n2Str)
+    if n2 == 0 :
+        return 'nsccGZ-KD1810'
+    else:
+        return 'nsccGZ-KD1812'
+
+G_username = "nscc"
+
 retStrP = ""
 def cb(retStr):
     global retStrP
@@ -19,10 +29,12 @@ def execToAHost(jsonStr, asRoot=False):
     jo = json.loads(jsonStr)
     resultStr = ""
     cmdOut = ""
+    host = jo['host']
+    password = hostToPasswod(host)
     if asRoot:
-        resultStr, cmdOut = sshClient.execCmdRoot(jo['host'], jo['username'], jo['password'], jo['cmd'])
+        resultStr, cmdOut = sshClient.execCmdRoot(host, G_username, password, jo['cmd'])
     else:
-        resultStr, cmdOut = sshClient.execCmdCurrUser(jo['host'], jo['username'], jo['password'], jo['cmd'])
+        resultStr, cmdOut = sshClient.execCmdCurrUser(host, G_username, password, jo['cmd'])
     return resultStr, cmdOut
 
 def execCmd(hosts, dict1, cmdStr, asRoot=True):
@@ -47,15 +59,18 @@ def execCmd(hosts, dict1, cmdStr, asRoot=True):
 def _scpFToAHost(jsonStr): # 作为子进程执行函数，一个字符串参数方便传参数
     print("\n*****111111****\n")
     jo = json.loads(jsonStr)
+    host = jo['host']
     resultStr = sshClient.scpFileToAHost(\
-        jo['username'], jo['host'], jo['password'], jo['srcResDir'], jo['destResDir'])
+        G_username, host, hostToPasswod(host), jo['srcResDir'], jo['destResDir'])
     print("\n*****222222****\n")
     return resultStr, ""
 
-def _scpDirOrFile(hosts, dict1):
+def _scpDirOrFile(hosts, dict1, srcDir, destDir):
     po=Pool(len(hosts))
     global retStrP
     retStrP = ""
+    dict1['srcResDir'] = srcDir
+    dict1['destResDir'] = destDir
     for i in range(0, len(hosts)):
         dict1["host"] = hosts[i]
         jsonStr = json.dumps(dict1)
@@ -68,18 +83,14 @@ def _scpDirOrFile(hosts, dict1):
 
 def scpDir(hosts, dict1, parentDir, dirName):
     execCmd(hosts, dict1, '/bin/rm -rf '+ parentDir + dirName)
-    dict1['srcResDir'] = parentDir + dirName
-    dict1['destResDir'] = parentDir
-    retStrF = _scpDirOrFile(hosts, dict1)
+    retStrF = _scpDirOrFile(hosts, dict1, parentDir + dirName, parentDir)
     retStr0 = "-- scpDir -- complete"; print(retStr0)
     retStr = "%s\n%s" % (retStrF, retStr0)
     return retStr
 
 def scpFile(hosts, dict1, dirPath, filename):
     execCmd(hosts, dict1, '/bin/rm -rf ' + dirPath + filename)
-    dict1['srcResDir']= dirPath + filename
-    dict1['destResDir']= dirPath + filename
-    retStrF = _scpDirOrFile(hosts, dict1)
+    retStrF = _scpDirOrFile(hosts, dict1, dirPath + filename, dirPath + filename)
     retStr0 = "-- scpFile -- complete"; print(retStr0)
     retStr = "%s\n%s" % (retStrF, retStr0)
     return retStr

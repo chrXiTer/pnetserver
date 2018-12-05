@@ -8,8 +8,6 @@ dict1 = {
     'username':'nscc',
     'host':'',
     'password':'nsccGZ-KD1810',
-    'srcResDir':'',
-    'destResDir':'',
     'cmd':''
 }
 
