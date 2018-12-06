@@ -46,7 +46,7 @@ class SshClient(object):
     def _execHostCmd(self, host, sshObjRoot, cmd):
         sshObjRoot.sendline(cmd)
         retStrs = []
-        for i in range(0, 20):
+        for i in range(0, 2000):
             ret = sshObjRoot.prompt(15)
             retStrs.append("--execCmdRoot --exec--%d--%s--%s" % (i, str(ret), host)); print(retStrs[-1])
             if ret == True:

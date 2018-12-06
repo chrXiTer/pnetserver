@@ -39,12 +39,12 @@ def scpFile(jsonStr):
     retStr = thM.scpFile(jo['hosts'], jo['dict1'], jo['dirPath'], jo['filename'])
     return (retStr)
 
-def genSnapshot_() # srcHost 生成快照并停止
+def genSnapshot_(): # srcHost 生成快照并停止
     cmd = 'docker checkpoint create --checkpoint-dir=/root/tmp %s checkpoint2', jo['containerName']
     resultStr, cmdOut = thM.sshClient.execCmdRoot(jo['srcHost'], jo['username'], jo['password'], cmd) 
     return resultStr, cmdOut
 
-def restore_(jo)
+def restore_(jo):
     cName = jo['containerName']
     cmd = "docker create --name %s --security-opt seccomp:unconfined alpine:3.8 \
          /bin/sh -c 'i=0; while true; do echo $i; i=$(expr $i + 1); sleep 1; done;\n' \
