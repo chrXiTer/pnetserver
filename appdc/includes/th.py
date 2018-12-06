@@ -10,6 +10,7 @@ from .ssh import SshClient
 sshClient = SshClient()
 
 def hostToPasswod(host):
+    print(host)
     n2Str = host.split('.')[2]
     n2 = int(n2Str)
     if n2 == 0 :
