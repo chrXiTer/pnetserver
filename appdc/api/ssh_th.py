@@ -9,6 +9,8 @@ from flask_cors import cross_origin
 from . import dispatcher, message
 from multiprocessing import Pool
 
+import pexpect
+
 from appdc.includes.ssh import SshClient
 import appdc.includes.th as thM 
 
@@ -23,6 +25,15 @@ def execCmd(jsonStr):
 @cross_origin()
 def execCmdAHost(jsonStr):
     retStr, out = thM.execToAHost(jsonStr, asRoot=True)
+    return json.dumps({"retStr":retStr, "out":out})
+
+@dispatcher.action("execCmdLocal") # 直接在服务端本地执行命令
+@cross_origin()
+def execCmdLocal(jsonStr):
+    jo = json.loads(jsonStr)
+    cmd = jo['cmd']
+    (out, retStr) = pexpect.run(cmd, withexitstatus=1)
+    retStr = str(retStr)
     return json.dumps({"retStr":retStr, "out":out})
 
 @dispatcher.action("scpDir")
