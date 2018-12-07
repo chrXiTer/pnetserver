@@ -25,7 +25,9 @@ class SshClient(object):
         sshObj = pxssh.pxssh(timeout=300,options={
                     "StrictHostKeyChecking": "no",
                     "UserKnownHostsFile": "/dev/null"})
+        print("cx___2___%s___%s_____%s"%(host, username, password))
         sshObj.login(host, username, password)
+        print("cx___3____")
         return sshObj
 
     def sudo_i(self, sshObj, password, host):
@@ -62,9 +64,12 @@ class SshClient(object):
         retStrs = []
         cmdout = ""
         try:
+            print(cmd)
             retStrs.append('---execCmdRoot-start---%s' % host); print(retStrs[-1])
             sshObj = self.sshLogin(host, username, password)
+            print("cx____________")
             self.sudo_i(sshObj, password, host)
+            print(cmd)
             retStr2, cmdout = self._execHostCmd(host, sshObj, cmd)
             retStrs.append(retStr2) # 信息已经 print 过，不再 print
         except Exception as e:
