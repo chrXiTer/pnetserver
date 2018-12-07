@@ -57,7 +57,7 @@ class SshClient(object):
         #print(str(sshObjRoot.before))
         #print(str(sshObjRoot.buffer))
         #print(str(sshObjRoot.after))
-        return "\n".join(retStrs), str(sshObjRoot.before)
+        return "\n".join(retStrs), str(sshObjRoot.before).replace('\\r\\n', '\r\n')
 
 
     def execCmdRoot(self, host, username, password, cmd):

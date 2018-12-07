@@ -39,7 +39,7 @@ def scpFile(jsonStr):
     retStr = thM.scpFile(jo['hosts'], jo['dict1'], jo['dirPath'], jo['filename'])
     return (retStr)
 
-def genSnapshot_(): # srcHost 生成快照并停止
+def genSnapshot_(jo): # srcHost 生成快照并停止
     cmd = 'docker checkpoint create --checkpoint-dir=/root/tmp %s checkpoint2', jo['containerName']
     resultStr, cmdOut = thM.sshClient.execCmdRoot(jo['srcHost'], jo['username'], jo['password'], cmd) 
     return resultStr, cmdOut
@@ -50,6 +50,7 @@ def restore_(jo):
          /bin/sh -c 'i=0; while true; do echo $i; i=$(expr $i + 1); sleep 1; done;\n' \
          docker start --checkpoint-dir=/root/tmp --checkpoint=checkpoint2 %s" , (cName, cName)
     resultStr, cmdOut = thM.sshClient.execCmdRoot(jo['descHost'], jo['username'], jo['password'], cmd) 
+    return resultStr, cmdOut
 
 
 @dispatcher.action("liveMigration")
@@ -58,15 +59,15 @@ def liveMigration(jsonStr):
     jo = json.loads(jsonStr)
     ret = []
     retStr, cmdOut = genSnapshot_(jo)
-    ret.push({"retStr":retStr, "out":out})
+    ret.append({"retStr":retStr, "out":cmdOut})
 
     # 复制文件
     cmd=""
-    resultStr, cmdOut = thM.sshClient.execCmdRoot(jo['descHost'], jo['username'], jo['password'], cmd)
+    retStr, cmdOut = thM.sshClient.execCmdRoot(jo['descHost'], jo['username'], jo['password'], cmd)
     # TODO
 
     retStr, cmdOut = restore_(jo)
-    ret.push({"retStr":retStr, "out":out})
+    ret.append({"retStr":retStr, "out":cmdOut})
     return json.dumps(ret)
 
 @dispatcher.action("genSnapshot")
@@ -74,7 +75,7 @@ def liveMigration(jsonStr):
 def genSnapshot(jsonStr):
     jo = json.loads(jsonStr)
     retStr, cmdOut = genSnapshot_(jo)
-    return json.dumps({"retStr":retStr, "out":out})
+    return json.dumps({"retStr":retStr, "out":cmdOut})
 
 
 @dispatcher.action("restoreSnapshot")
@@ -82,7 +83,7 @@ def genSnapshot(jsonStr):
 def restoreSnapshot(jsonStr):
     jo = json.loads(jsonStr)
     retStr, cmdOut = restore_(jo)
-    return json.dumps({"retStr":retStr, "out":out})
+    return json.dumps({"retStr":retStr, "out":cmdOut})
     #ret = []
     #retStr, cmdOut = runSameContainer_(jo)
     #ret.push({"retStr":retStr, "out":out})
