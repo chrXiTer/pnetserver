@@ -26,7 +26,6 @@ def cb(retStr):
     retStrP = retStrP + retStr[1][0:100]
 
 def execToAHost(jsonStr, asRoot=False):
-    #print("\n*****444444***\n")
     jo = json.loads(jsonStr)
     resultStr = ""
     cmdOut = ""
@@ -39,17 +38,13 @@ def execToAHost(jsonStr, asRoot=False):
     return resultStr, cmdOut
 
 def execCmd(hosts, dict1, cmdStr, asRoot=True):
-    #print(str(hosts))
-    #print(str(dict1))
-    #print(str(cmdStr)) 
     dict1['cmd']=cmdStr
     po=Pool(len(hosts))
     global retStrP
     retStrP = ""
     for i in range(0, len(hosts)):
         dict1["host"] = hosts[i]
-        jsonStr = json.dumps(dict1)
-        print("\n*****3333333***\n")
+        jsonStr = json.dumps(dict1)  #print("\n*****3333333***\n")
         po.apply_async(execToAHost, args=(jsonStr, asRoot, ), callback=cb)
     po.close() 
     po.join() 
@@ -58,12 +53,10 @@ def execCmd(hosts, dict1, cmdStr, asRoot=True):
     return retStr
 
 def _scpFToAHost(jsonStr): # 作为子进程执行函数，一个字符串参数方便传参数
-    print("\n*****111111****\n")
     jo = json.loads(jsonStr)
     host = jo['host']
     resultStr = sshClient.scpFileToAHost(\
         G_username, host, hostToPasswod(host), jo['srcResDir'], jo['destResDir'])
-    print("\n*****222222****\n")
     return resultStr, ""
 
 def _scpDirOrFile(hosts, dict1, srcDir, destDir):
