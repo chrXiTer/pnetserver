@@ -1,9 +1,9 @@
 flask
-Flask-Script
 flask_bootstrap
 flask-cors
 simplejson
 pexpect
+#Flask-Script
 #sphinx
 #HTML2Text
 #urllib3

@@ -1,11 +1,8 @@
 from appdc import create_app
-from flask_script import Manager
 import appdc.cmd.cmd as cmdM
 import sys
 
 app = create_app()
-
-manager = Manager(app)
 
 @app.route('/12345')
 def index():
@@ -18,6 +15,6 @@ if __name__ == "__main__":
     if len(sys.argv) == 0: 
         cmdM.main()
     else:
-        manager.run()
+        app.run(processes=32)
 
 
