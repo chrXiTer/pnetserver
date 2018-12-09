@@ -48,7 +48,7 @@ def execCmd(hosts, dict1, cmdStr, asRoot=True):
         po.apply_async(execToAHost, args=(jsonStr, asRoot, ), callback=cb)
     po.close() 
     po.join() 
-    retStr0 = "--crun.py execCmd %s -- complete", cmdStr; print(retStr0)
+    retStr0 = "--crun.py execCmd %s -- complete" % cmdStr; print(retStr0)
     retStr = "%s\n%s" % (retStrP, retStr0)
     return retStr
 
