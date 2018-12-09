@@ -15,6 +15,6 @@ if __name__ == "__main__":
     if len(sys.argv) == 0: 
         cmdM.main()
     else:
-        app.run(processes=32)
+        app.run('0.0.0.0', '80', threaded=False, processes=64)
 
 
