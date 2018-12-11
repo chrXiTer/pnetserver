@@ -80,28 +80,5 @@ docker run -d --network L2onet --name loop --security-opt seccomp:unconfined alp
          
 
 
-""" 
---ip 10.0.1.13
 
-docker run -d --network L2onet  --name looper --security-opt seccomp:unconfined alpine:3.8 \
-    /bin/sh -c 'i=0; while true; do echo $i; i=$(expr $i + 1); sleep 1; done'
-
-docker exec -it looper ip addr # 10.0.1.5
-docker logs looper
-
-
-docker checkpoint create --checkpoint-dir=/tmp looper checkpoint3
-docker logs looper   #在131结束
-
-scp -r ./checkpoint3 nscc@10.144.0.27:/home/nscc
-
-
-docker create --network L2onet --name looper --security-opt seccomp:unconfined alpine:3.8 \
-    /bin/sh -c 'i=0; while true; do echo $i; i=$(expr $i + 1); sleep 1; done'
-docker start --checkpoint-dir=//home/nscc --checkpoint=checkpoint3 looper
-
-docker logs looper  #从132开始
-docker exec -it looper ip addr # 10.0.1.5
-
-"""
 
