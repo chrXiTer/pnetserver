@@ -9,7 +9,7 @@ class SshClient(object):
                 cmd='scp -r {srcResDir} {username}@{host}:{destResDir} '\
                     .format(srcResDir=srcResDir, username=username, host=host, destResDir=destResDir)
             else:
-                cmd='rsync -az {srcResDir} -e ssh {username}@{host}:{destResDir} '\
+                cmd='rsync -az --delete {srcResDir} -e ssh {username}@{host}:{destResDir} '\
                     .format(srcResDir=srcResDir, username=username, host=host, destResDir=destResDir)
             child = pexpect.spawn(cmd, timeout=timeout) 
             child.expect("password:")
