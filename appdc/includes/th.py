@@ -56,15 +56,16 @@ def _scpFToAHost(jsonStr): # 作为子进程执行函数，一个字符串参数
     jo = json.loads(jsonStr)
     host = jo['host']
     resultStr = sshClient.scpFileToAHost(\
-        G_username, host, hostToPasswod(host), jo['srcResDir'], jo['destResDir'])
+        G_username, host, hostToPasswod(host), jo['srcResDir'], jo['destResDir'], jo['isRsync'])
     return resultStr, ""
 
-def _scpDirOrFile(hosts, dict1, srcDir, destDir):
+def _scpDirOrFile(hosts, dict1, srcDir, destDir, isRsync=False):
     po=Pool(len(hosts))
     global retStrP
     retStrP = ""
     dict1['srcResDir'] = srcDir
     dict1['destResDir'] = destDir
+    dict1['isRsync'] = isRsync
     for i in range(0, len(hosts)):
         dict1["host"] = hosts[i]
         jsonStr = json.dumps(dict1)
@@ -75,16 +76,25 @@ def _scpDirOrFile(hosts, dict1, srcDir, destDir):
     retStr = "%s\n%s" % (retStrP, retStr0)
     return retStr
 
-def scpDir(hosts, dict1, parentDir, dirName):
-    execCmd(hosts, dict1, '/bin/rm -rf '+ parentDir + dirName)
-    retStrF = _scpDirOrFile(hosts, dict1, parentDir + dirName, parentDir)
-    retStr0 = "-- scpDir -- complete"; print(retStr0)
-    retStr = "%s\n%s" % (retStrF, retStr0)
-    return retStr
-
 def scpFile(hosts, dict1, dirPath, filename):
     execCmd(hosts, dict1, '/bin/rm -rf ' + dirPath + filename)
-    retStrF = _scpDirOrFile(hosts, dict1, dirPath + filename, dirPath + filename)
+    retStrF=''
+    if os.path.isdir(dirPath + filename):
+        retStrF = _scpDirOrFile(hosts, dict1, dirPath + filename, dirPath)
+    else:
+        retStrF = _scpDirOrFile(hosts, dict1, dirPath + filename, dirPath + filename)
     retStr0 = "-- scpFile -- complete"; print(retStr0)
     retStr = "%s\n%s" % (retStrF, retStr0)
     return retStr
+
+def rsyncFile(hosts, dict1, dirPath, filename):
+    execCmd(hosts, dict1, 'echo 111')
+    retStrF=''
+    if os.path.isdir(dirPath + filename):
+        retStrF = _scpDirOrFile(hosts, dict1, dirPath + filename, dirPath, True)
+    else:
+        retStrF = _scpDirOrFile(hosts, dict1, dirPath + filename, dirPath + filename, True)
+    retStr0 = "-- rsyncFile -- complete"; print(retStr0)
+    retStr = "%s\n%s" % (retStrF, retStr0)
+    return retStr
+

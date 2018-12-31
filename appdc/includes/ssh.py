@@ -2,16 +2,20 @@ import pexpect
 from pexpect import pxssh, TIMEOUT
 #001
 class SshClient(object):
-    def scpFileToAHost(self, username, host, password, srcResDir, destResDir,timeout=None):
-        print("\n***12345*****")
-        try:      
-            cmd='scp -r {srcResDir} {username}@{host}:{destResDir} '\
-                .format(srcResDir=srcResDir, username=username, host=host, destResDir=destResDir)
+    def scpFileToAHost(self, username, host, password, srcResDir, destResDir, isRsync=False, timeout=None):
+        try:
+            cmd=''
+            if isRsync:      
+                cmd='scp -r {srcResDir} {username}@{host}:{destResDir} '\
+                    .format(srcResDir=srcResDir, username=username, host=host, destResDir=destResDir)
+            else:
+                cmd='rsync -az {srcResDir} -e ssh {username}@{host}:{destResDir} '\
+                    .format(srcResDir=srcResDir, username=username, host=host, destResDir=destResDir)
             child = pexpect.spawn(cmd, timeout=timeout) 
             child.expect("password:")
-            child.sendline(password)     
+            child.sendline(password)
             ret = child.read().decode()
-            child.close()     
+            child.close()
             resultStr='--scpFileToAHost-ok- %s --%s' % (host, ret)
             print(resultStr)
             print(cmd)
@@ -109,5 +113,4 @@ class SshClient(object):
         print('--checkFirst-ok- %s' % host)
         return '--checkFirst-ok- %s' % host
 
-    
 
