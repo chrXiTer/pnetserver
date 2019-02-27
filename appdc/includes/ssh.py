@@ -5,11 +5,11 @@ class SshClient(object):
     def scpFileToAHost(self, username, host, password, srcResDir, destResDir, isRsync=False, timeout=None):
         try:
             cmd=''
-            if isRsync:      
-                cmd='scp -r {srcResDir} {username}@{host}:{destResDir} '\
-                    .format(srcResDir=srcResDir, username=username, host=host, destResDir=destResDir)
-            else:
+            if isRsync:
                 cmd='rsync -az --delete {srcResDir} -e ssh {username}@{host}:{destResDir} '\
+                    .format(srcResDir=srcResDir, username=username, host=host, destResDir=destResDir)  
+            else:
+                cmd='scp -r {srcResDir} {username}@{host}:{destResDir} '\
                     .format(srcResDir=srcResDir, username=username, host=host, destResDir=destResDir)
             child = pexpect.spawn(cmd, timeout=timeout) 
             child.expect("password:")
