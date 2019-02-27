@@ -101,9 +101,7 @@ def request_check_start(app):
     def create_tables(db):
         db.create_all()
 
-    '''
 
-    '''
     def exist_table(app):
         url = app.config["SQLALCHEMY_DATABASE_URI"]
         return _exist_table(url)
