@@ -3,7 +3,6 @@ class Config(object):
     SECRET_KEY = 'this is secret string'
 
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
-
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # catalog max depth
@@ -21,3 +20,8 @@ class Config(object):
     IMAGE_PATH = "resource/image/image"
 
     BOOK_COVER_PATH = "resource/image/cover"
+
+    DBHost=""
+    DBUser=""
+    DBPassword=""
+    DBName="pnet"

@@ -1,28 +1,31 @@
 #coding: utf-8
 import os
 from flask import current_app, render_template
-from sqlalchemy import *
+#from sqlalchemy import *
 
+from flask import redirect, url_for, request
 
-def exist_config():
-    return _exist_config(current_app)
-
-
-def _exist_config(app):
+def exist_config(app):
     filename = "{}/config.py".format(app.root_path)
     return os.path.exists(filename)
 
+def loadConfigDefault(app):
+    from appdc.config_default import Config
+    app.config.from_object(Config)
 
-def create_config(username, password, host, db):
-    data = render_template("admin/start/config.html", username=username,
-        password=password, host=host, db = db)
-    filename = '{}/config.py'.format(current_app.root_path)
-    fd = open(filename, "w")
-    fd.write(data)
-    fd.close()
-
-
-def create_path(app):
+def loadConfigCustom(app):
+    app.start = False
+    filename = "{}/config.py".format(app.root_path)
+    if os.path.exists(filename):
+        from appdc.config import Config
+        app.config.from_object(Config)
+        '''
+        if start.exist_table(app):
+            start.load_site(app)
+            app.start = True
+            return
+        '''
+def create_path(app):  # 创建系统运行中需要使用的目录
     paths, config = [], app.config
     log_path, _ = os.path.split(config["ERROR_LOG"])
     paths.append(os.path.join(app.root_path, log_path))
@@ -35,6 +38,25 @@ def create_path(app):
         if not os.path.exists(path):
             os.makedirs(path)
 
+def request_check_start(app):
+    if app.start: # 在start模块中设置
+        return
+'''
+    ends = frozenset(["admin.setup", "admin.install", "static"])
+    if request.endpoint in ends:
+        return
+    if not exist_config(app):
+        return redirect(url_for("admin.setup"))
+    return redirect(url_for("admin.install"))
+
+
+def create_config(username, password, host, db):
+    data = render_template("admin/start/config.html", username=username,
+        password=password, host=host, db = db)
+    filename = '{}/config.py'.format(current_app.root_path)
+    fd = open(filename, "w")
+    fd.write(data)
+    fd.close()
 
 def connect_mysql(url):
     """1049 => 数据库不存在
@@ -48,11 +70,12 @@ def connect_mysql(url):
         return code
     return 0
 
-
 def create_tables(db):
     db.create_all()
 
+'''
 
+'''
 def exist_table(app):
     url = app.config["SQLALCHEMY_DATABASE_URI"]
     return _exist_table(url)
@@ -79,5 +102,5 @@ def load_site(app):
         def site_context_processor():
             return dict(site=app.site)
         app.context_processor(site_context_processor)
-
+'''
 

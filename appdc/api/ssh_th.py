@@ -6,7 +6,7 @@ import base64, hashlib, os
 import simplejson as json
 from flask import current_app, url_for, render_template, Markup
 from flask_cors import cross_origin
-from . import dispatcher, message
+from . import dispatcher
 from multiprocessing import Pool
 
 import pexpect
