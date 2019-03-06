@@ -35,7 +35,7 @@ class Dispatcher(object):
         if authType == 'noAuth':
             return func(**params)
         else:
-            func = jwt_required()(func)
+            #func = jwt_required()(func)
             return func(**params)
 
 dispatcher = Dispatcher()
