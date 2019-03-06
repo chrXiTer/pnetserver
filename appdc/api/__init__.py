@@ -31,7 +31,7 @@ class Dispatcher(object):
         func = self._funcs.get(name)
         if not func:
             return message("error", "", "not exists action")
-        authType = actionAuthType[name]
+        authType = actionAuthType.get(name)
         if authType == 'noAuth':
             return func(**params)
         else:
