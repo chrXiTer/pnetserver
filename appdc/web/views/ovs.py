@@ -229,19 +229,23 @@ def network_join():
     command = "ip link set dev %s address %s" \
               % (veth_inside, mac_address)
 
+    '''
     try:
         call_popen(shlex.split(command))
     except Exception as e:
         error = "network_join: failed to set veth mac address (%s)" % (str(e))
         return jsonify({'Err': error})
+    '''
 
     command = "ip link set %s up" % (veth_outside)
 
+    '''
     try:
         call_popen(shlex.split(command))
     except Exception as e:
         error = "network_join: failed to up the veth interface (%s)" % (str(e))
         return jsonify({'Err': error})
+
 
     try:
         ovs_vsctl("add-port", OVN_BRIDGE, veth_outside)
@@ -253,6 +257,7 @@ def network_join():
     except Exception as e:
         error = "network_join: failed to create a port (%s)" % (str(e))
         return jsonify({'Err': error})
+    '''
 
     return jsonify({"InterfaceName": {
                                         "SrcName": veth_inside,

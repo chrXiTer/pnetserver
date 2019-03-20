@@ -17,7 +17,6 @@ import ovs.vlog
 from flask import Flask, jsonify
 from flask import request, abort
 
-
 vlog = ovs.vlog.Vlog("ovn-docker-overlay-driver")
 
 OVN_BRIDGE = "br-int"
