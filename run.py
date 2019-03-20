@@ -1,7 +1,7 @@
 from appdc import create_app
 import appdc.cmd.cmd as cmdM
 import sys
-import appdc.ovs.new.tool all ovsTool
+import appdc.ovsnew.tool as ovsTool
 
 app = create_app()
 
