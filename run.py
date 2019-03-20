@@ -16,6 +16,7 @@ if __name__ == "__main__":
     if len(sys.argv) == 0: 
         cmdM.main()
     else:
+        sys.argv = []
         ovsTool.prepare()
         app.run('0.0.0.0', '80', threaded=False, processes=64)
 
