@@ -75,6 +75,7 @@ def ovn_init_overlay():
               "external_ids:ovn-bridge=" + OVN_BRIDGE)
 
 def prepare():
+    '''
     parser = argparse.ArgumentParser()
 
     ovs.vlog.add_args(parser)
@@ -82,6 +83,7 @@ def prepare():
     args = parser.parse_args()
     ovs.vlog.handle_args(args)
     ovs.daemon.handle_args(args)
+    '''
     ovn_init_overlay()
 
     if not os.path.isdir(PLUGIN_DIR):
