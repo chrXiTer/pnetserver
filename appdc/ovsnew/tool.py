@@ -59,6 +59,7 @@ def cleanup():
         os.remove(PLUGIN_FILE)
 
 def ovn_init_overlay():
+    '''
     br_list = ovs_vsctl("list-br").split()
     if OVN_BRIDGE not in br_list:
         ovs_vsctl("--", "--may-exist", "add-br", OVN_BRIDGE,
@@ -74,6 +75,7 @@ def ovn_init_overlay():
 
     ovs_vsctl("set", "open_vswitch", ".",
               "external_ids:ovn-bridge=" + OVN_BRIDGE)
+    '''
 
 def prepare():
     '''
