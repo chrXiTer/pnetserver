@@ -46,11 +46,12 @@ def call_popen(cmd):
 
 def call_prog(prog, args_list):
     cmd = [prog, "--timeout=5", "-vconsole:off"] + args_list
-    return call_popen(cmd)
+    #return call_popen(cmd)
 
 
 def ovs_vsctl(*args):
-    return call_prog("ovs-vsctl", list(args))
+    pass
+    #return call_prog("ovs-vsctl", list(args))
 
 
 def cleanup():
