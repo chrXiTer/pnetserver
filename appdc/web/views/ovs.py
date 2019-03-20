@@ -220,6 +220,7 @@ def network_join():
     veth_inside = eid[0:13] + "_c"
     command = "ip link add %s type veth peer name %s" \
               % (veth_inside, veth_outside)
+    '''
     try:
         call_popen(shlex.split(command))
     except Exception as e:
@@ -229,7 +230,7 @@ def network_join():
     command = "ip link set dev %s address %s" \
               % (veth_inside, mac_address)
 
-    '''
+
     try:
         call_popen(shlex.split(command))
     except Exception as e:
