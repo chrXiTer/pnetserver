@@ -131,6 +131,8 @@ def create_endpoint():
                                     }})
 
 def get_lsp_addresses(eid):
+    pass
+    '''
     ret = ovn_nbctl("--if-exists", "get", "Logical_Switch_Port", eid,
                     "addresses")
     if not ret:
@@ -142,6 +144,7 @@ def get_lsp_addresses(eid):
         return (None, None, error)
     (mac_address, ip_address) = addresses[0].split()
     return (mac_address, ip_address, None)
+    '''
 
 
 @web.route('/NetworkDriver.EndpointOperInfo', methods=['POST'])
@@ -207,7 +210,7 @@ def network_join():
 
     # sboxkey is of the form: /var/run/docker/netns/CONTAINER_ID
     vm_id = sboxkey.rsplit('/')[-1]
-
+    '''
     try:
         (mac_address, ip_address, error) = get_lsp_addresses(eid)
         if error:
@@ -215,7 +218,7 @@ def network_join():
     except Exception as e:
         error = "network_join: %s" % (str(e))
         return jsonify({'Err': error})
-
+    '''
     veth_outside = eid[0:15]
     veth_inside = eid[0:13] + "_c"
     command = "ip link add %s type veth peer name %s" \
