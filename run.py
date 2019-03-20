@@ -1,6 +1,7 @@
 from appdc import create_app
 import appdc.cmd.cmd as cmdM
 import sys
+import appdc.ovs.new.tool all ovsTool
 
 app = create_app()
 
@@ -15,6 +16,7 @@ if __name__ == "__main__":
     if len(sys.argv) == 0: 
         cmdM.main()
     else:
+        ovsTool.prepare()
         app.run('0.0.0.0', '80', threaded=False, processes=64)
 
 
