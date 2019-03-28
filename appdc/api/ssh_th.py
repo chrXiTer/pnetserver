@@ -57,7 +57,7 @@ def listDir(jsonStr):
     jo = json.loads(jsonStr)
     path = jo["dir"]
     ret = []
-    if os.path.isdir(dir):
+    if os.path.isdir(path):
         parents = os.listdir(path)
         for parent in parents:
             ret.append({"name":parent, "isDir":os.isdir(dir)})
