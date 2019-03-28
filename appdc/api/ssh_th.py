@@ -51,3 +51,16 @@ def rsyncFile(jsonStr):
     return (retStr)
 
 
+@dispatcher.action("listDir")
+@cross_origin()
+def listDir(jsonStr):
+    jo = json.loads(jsonStr)
+    path = jo["dir"]
+    ret = []
+    if os.path.isdir(dir):
+        parents = os.listdir(path)
+        for parent in parents:
+            ret.append({"name":parent, "isDir":os.isdir(dir)})
+    return json.dumps(ret)
+
+
