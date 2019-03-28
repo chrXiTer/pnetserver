@@ -55,6 +55,7 @@ def rsyncFile(jsonStr):
 @cross_origin()
 def listDir(jsonStr):
     jo = json.loads(jsonStr)
+    print(jsonStr)
     path = jo["dir"]
     ret = []
     if os.path.isdir(path):
