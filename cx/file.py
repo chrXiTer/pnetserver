@@ -1,5 +1,31 @@
 #coding: utf-8
 import os, re, uuid, io, shutil
+import pandas as pd
+
+def addStrToFile(fileName, strContent):
+    f = open(fileName, 'a')
+    f.write(strContent)
+    f.close()
+
+def writeStrToFile(fileName, fileContent):
+    f = open(fileName, 'w')
+    f.write(fileContent)
+    f.close()
+
+def readStrFromFile(fileName):
+    try:
+        f = open(fileName, 'r')
+        ret = f.read()
+        return ret
+    except:
+        return ''
+
+def cvsToObjList(path):
+    data = pd.read_csv(path, dtype={'电话':str,'身份证':str})
+    dictC = data.T.to_dict()
+    listC = [dictC[i] for i in range(len(dictC))]
+    return listC
+
 
 '''
 from PIL import Image

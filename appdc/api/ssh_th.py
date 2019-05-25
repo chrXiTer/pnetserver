@@ -11,7 +11,7 @@ from multiprocessing import Pool
 
 import pexpect
 
-from appdc.includes.ssh import SshClient
+from cxshare.ssh import SshClient
 import appdc.includes.th as thM 
 
 @dispatcher.action("execCmd")

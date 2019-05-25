@@ -4,8 +4,8 @@ from datetime import datetime
 from flask import current_app
 from werkzeug.security import generate_password_hash, check_password_hash
 from appdc.models.model import db
-from appdc.includes import file 
-import appdc.includes.dbTool as dbTool
+from cxshare import file 
+import cxshare.dbTool as dbTool
 from werkzeug.security import safe_str_cmp
 import uuid
 

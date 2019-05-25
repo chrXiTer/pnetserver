@@ -8,7 +8,7 @@ from multiprocessing import Pool
 
 import pexpect
 
-from appdc.includes.ssh import SshClient
+from cxshare.ssh import SshClient
 import appdc.includes.th as thM 
 
 def genSnapshot_(jo): # srcHost 生成快照并停止
