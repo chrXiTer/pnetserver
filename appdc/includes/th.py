@@ -3,7 +3,7 @@ import simplejson as json
 from flask import current_app, url_for, render_template, Markup
 from multiprocessing import Pool
 
-from .ssh import SshClient
+from cxshare.ssh import SshClient
 
 # th 节点处理专用共享库
 
