@@ -4,11 +4,49 @@ import os
 
 
 def getDBConnect(host, user, password, dbName): # 打开数据库连接
-    db = pymysql.connect(host, user, password, dbName)
+    conn = pymysql.connect(host, user, password, dbName)
     return db
 
-def closeDBConnect(db):# 关闭数据库连接
-    db.close()
+def closeDBConnect(conn):# 关闭数据库连接
+    conn.close()
+
+def insertDataToDb(conn, tableName, colNameList, data):
+    cursor = conn.cursor()
+    strT1 = ", ".join(colNameList)
+    strT2 = ", ".join(['"%s"' % data[colNameList[i]] for i in range(len(colNameList))])
+    sqlStr = 'INSERT INTO %s (%s) VALUES (%s);' % (tableName, strT1, strT2)
+    try:
+        d1 = cursor.execute(sqlStr)
+        d2 = conn.commit()
+    except:
+        conn.rollback()
+
+def selectOneDataById(conn, tableName, colNameList, ID):
+    strT1 = ", ".join(colNameList)
+    sqlStr = 'SELECT %s FROM %s WHERE ID=%d;' % (strT1, tableName, ID)
+    dataOri = selectOne(conn, sqlStr)
+    return dataOri
+    #data = [dataOri[colName] for colName in colNameList]
+    #return data
+
+def updateDataToDb(conn, tableName, colNameList, record):
+    strs = []
+    ID = None
+    for i in range(len(colNameList)):
+        recordValue = str(record[i])
+        if type(record[i]).__name__ == 'str':
+            recordValue = "'" + record[i] + "'"
+        elif colNameList[i] == 'ID':
+            ID = recordValue
+        elif type(record[i]).__name__ == 'NoneType':
+            recordValue = 'null'
+        strs.append("`" + colNameList[i] + "` = " + recordValue)
+    strT = ", ".join(strs)
+    sqlStr = 'UPDATE %s set %s where ID=%s;' % (tableName, strT, ID)
+    execUpdate(conn, sqlStr)
+
+def getInsertId(db):
+    return selectOne(db, 'SELECT LAST_INSERT_ID();')
 
 def execSqlFile(db, sqlFilePath):
     cursor = db.cursor()
