@@ -53,7 +53,7 @@ def loadConfigCustom(app):
             return
         '''
 
-def create_path(app):  # 创建系统运行中需要使用的目录
+def create_path(app):  # 创建系统运行中需要使用的目录
     paths, config = [], app.config
     log_path, _ = os.path.split(config["ERROR_LOG"])
     paths.append(os.path.join(app.root_path, log_path))
