@@ -1,16 +1,8 @@
-import argparse
-import ast
-import atexit
+# 一个基于ovs的docker 组网方案用使用的命令
 import json
-import os
 import random
-import re
-import shlex
-import subprocess
-import sys
 
-
-from flask import Flask, jsonify
+from flask import jsonify
 from flask import request, abort
 from appdc.web import web
 

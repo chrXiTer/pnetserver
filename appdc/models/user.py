@@ -1,11 +1,7 @@
-#coding: utf-8
-from datetime import datetime
-
 from flask import current_app
 from werkzeug.security import generate_password_hash, check_password_hash
-from appdc.models.model import db
 from cxshare import file 
-import cxshare.dbTool as dbTool
+import cxshare.dbsqlite3 as dbTool
 from werkzeug.security import safe_str_cmp
 import uuid
 

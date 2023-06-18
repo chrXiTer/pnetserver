@@ -1,6 +1,5 @@
 #coding: utf-8
 import base64, hashlib, os
-import simplejson as json
 from flask import current_app, url_for, render_template, Markup
 import pexpect
 from pexpect import pxssh

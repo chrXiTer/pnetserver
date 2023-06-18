@@ -1,21 +1,11 @@
-import argparse
-import ast
 import atexit
-import json
 import os
-import random
-import re
-import shlex
 import subprocess
-import sys
 
 import ovs.dirs
 import ovs.util
 import ovs.daemon
 import ovs.vlog
-
-from flask import Flask, jsonify
-from flask import request, abort
 
 vlog = ovs.vlog.Vlog("ovn-docker-overlay-driver")
 

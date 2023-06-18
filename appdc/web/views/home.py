@@ -1,4 +1,3 @@
-#coding: utf-8
 import os
 from flask import send_from_directory, current_app, request, redirect, url_for, abort
 from appdc.web import web

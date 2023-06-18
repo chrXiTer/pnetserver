@@ -34,7 +34,7 @@ class Dispatcher(object):
 
 dispatcher = Dispatcher()
 
-@api.route("/<path:action>", methods=["GET", "POST"])
+@webapi.route("/<path:action>", methods=["GET", "POST"])
 @cross_origin()
 def index(action):
     params = request.values.to_dict()

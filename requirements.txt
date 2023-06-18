@@ -1,23 +1,8 @@
 flask
-flask_bootstrap
 flask-cors
-flask_jwt
-simplejson
 pexpect
 
 PyMySQL
 sqlalchemy
 Flask-SQLAlchemy
 
-#Flask-Script
-#sphinx
-#HTML2Text
-#urllib3
-#nose
-#bs4
-
-#
-#Pillow （系统平台相关）
-#readability-lxml （系统平台相关）
-
-#MySQL-python (mysqldb) 不支持 python3
